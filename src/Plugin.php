@@ -202,6 +202,9 @@ final class Plugin {
 			) . '</p></div>';
 		}
 
+		// The full header comparison travels with the review, so the viewer can replace
+		// WordPress's table when it takes over the page.
+		self::$report['headers'] = self::header_compare( (array) $current, (array) $uploaded, true );
 		self::enqueue();
 
 		$c       = self::$report['counts'];
@@ -238,15 +241,25 @@ final class Plugin {
 	}
 
 	/**
-	 * Header fields WordPress leaves out of its table.
+	 * Header fields side by side.
 	 *
-	 * @param string $table    Table HTML.
-	 * @param array  $current  Installed header data.
-	 * @param array  $uploaded Uploaded header data.
-	 * @return string
+	 * @param array $current  Installed header data.
+	 * @param array $uploaded Uploaded header data.
+	 * @param bool  $all      Include the fields WordPress's own table already shows.
+	 * @return array<int, array{key: string, label: string, current: string, uploaded: string}>
 	 */
-	private static function header_rows( $table, array $current, array $uploaded ) {
-		$fields = array(
+	private static function header_compare( array $current, array $uploaded, $all ) {
+		$fields = array();
+		if ( $all ) {
+			$fields = array(
+				'Name'        => __( 'Plugin name', 'patchmark' ),
+				'Version'     => __( 'Version', 'patchmark' ),
+				'Author'      => __( 'Author', 'patchmark' ),
+				'RequiresWP'  => __( 'Requires WordPress', 'patchmark' ),
+				'RequiresPHP' => __( 'Requires PHP', 'patchmark' ),
+			);
+		}
+		$fields += array(
 			'Description'     => __( 'Description', 'patchmark' ),
 			'PluginURI'       => __( 'Plugin URI', 'patchmark' ),
 			'AuthorURI'       => __( 'Author URI', 'patchmark' ),
@@ -256,7 +269,7 @@ final class Plugin {
 			'Network'         => __( 'Network only', 'patchmark' ),
 		);
 
-		$rows = '';
+		$rows = array();
 		foreach ( $fields as $key => $label ) {
 			$a = isset( $current[ $key ] ) ? $current[ $key ] : '';
 			$b = isset( $uploaded[ $key ] ) ? $uploaded[ $key ] : '';
@@ -269,12 +282,34 @@ final class Plugin {
 			if ( ( '' === $a && '' === $b ) || ( 'Network' === $key && $a === $b ) ) {
 				continue;
 			}
+			$rows[] = array(
+				'key'      => $key,
+				'label'    => $label,
+				'current'  => $a,
+				'uploaded' => $b,
+			);
+		}
+		return $rows;
+	}
+
+	/**
+	 * Header fields WordPress leaves out of its table, added to it. This is what shows when the
+	 * viewer can't run.
+	 *
+	 * @param string $table    Table HTML.
+	 * @param array  $current  Installed header data.
+	 * @param array  $uploaded Uploaded header data.
+	 * @return string
+	 */
+	private static function header_rows( $table, array $current, array $uploaded ) {
+		$rows = '';
+		foreach ( self::header_compare( $current, $uploaded, false ) as $row ) {
 			$rows .= sprintf(
 				'<tr><td class="name-label">%s</td><td>%s</td><td%s>%s</td></tr>',
-				esc_html( $label ),
-				esc_html( '' !== $a ? $a : '-' ),
-				$a !== $b ? ' class="warning"' : '',
-				esc_html( '' !== $b ? $b : '-' )
+				esc_html( $row['label'] ),
+				esc_html( '' !== $row['current'] ? $row['current'] : '-' ),
+				$row['current'] !== $row['uploaded'] ? ' class="warning"' : '',
+				esc_html( '' !== $row['uploaded'] ? $row['uploaded'] : '-' )
 			);
 		}
 

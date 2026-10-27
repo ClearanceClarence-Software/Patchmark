@@ -89,6 +89,13 @@ export interface Report {
 	};
 	files: FileEntry[];
 	ms: number;
+	// Header fields side by side, including the ones WordPress's table shows.
+	headers?: Array< {
+		key: string;
+		label: string;
+		current: string;
+		uploaded: string;
+	} >;
 }
 
 declare global {

@@ -2,12 +2,14 @@ import { useCallback, useMemo, useRef, useState } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import type { KeyboardEvent } from 'react';
 
+import Actions from './components/Actions';
 import ApiChanges, { apiCount } from './components/ApiChanges';
 import Changelog from './components/Changelog';
 import Files from './components/Files';
 import Findings from './components/Findings';
 import { Dashicon, Mark } from './components/ui';
 import { bytes, num, sizeChange, versionDirection } from './lib/format';
+import type { CorePage } from './lib/page';
 import type { Report } from './types';
 
 type Tab = 'review' | 'files' | 'changelog' | 'api';
@@ -19,7 +21,13 @@ export interface Target {
 	seq: number;
 }
 
-export default function App( { report }: { report: Report } ) {
+export default function App( {
+	report,
+	page,
+}: {
+	report: Report;
+	page: CorePage;
+} ) {
 	const c = report.counts;
 	const changed = c.added + c.removed + c.renamed + c.modified + c.whitespace;
 	const danger = report.findings.filter(
@@ -149,12 +157,39 @@ export default function App( { report }: { report: Report } ) {
 					</span>
 				</span>
 				<span className="pmk-topbar-note">
-					{ __(
-						'What the upload changes, before it replaces the installed copy',
-						'patchmark'
+					{ page.zip ? (
+						<>
+							{ __( 'Reviewing', 'patchmark' ) }{ ' ' }
+							<code>{ page.zip }</code>
+						</>
+					) : (
+						__(
+							'What the upload changes, before it replaces the installed copy',
+							'patchmark'
+						)
 					) }
 				</span>
+				<Actions page={ page } serious={ danger } />
 			</div>
+
+			{ page.blocked.length > 0 && (
+				<div className="pmk-blocked" role="alert">
+					<Dashicon name="dismiss" />
+					<div>
+						<strong>
+							{ __(
+								'WordPress won’t replace the plugin:',
+								'patchmark'
+							) }
+						</strong>
+						<ul>
+							{ page.blocked.map( ( reason ) => (
+								<li key={ reason }>{ reason }</li>
+							) ) }
+						</ul>
+					</div>
+				</div>
+			) }
 			<header className="pmk-head">
 				<div className="pmk-headline">
 					<div>
@@ -276,6 +311,28 @@ export default function App( { report }: { report: Report } ) {
 			>
 				{ tab === 'review' && (
 					<Findings report={ report } onOpen={ open } />
+				) }
+				{ tab === 'review' && page.notice && (
+					<p className="pmk-backup">
+						<Dashicon name="backup" />
+						{ page.notice.link ? (
+							<span>
+								{
+									page.notice.text.split(
+										page.notice.link.label
+									)[ 0 ]
+								}
+								<a href={ page.notice.link.href }>
+									{ page.notice.link.label }
+								</a>
+								{ page.notice.text.split(
+									page.notice.link.label
+								)[ 1 ] ?? '' }
+							</span>
+						) : (
+							page.notice.text
+						) }
+					</p>
 				) }
 				{ tab === 'files' && (
 					<Files report={ report } target={ target } />

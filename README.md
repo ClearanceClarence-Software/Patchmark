@@ -30,11 +30,13 @@ Requires WordPress 6.6+ and PHP 7.4+. Free and GPL. No settings, nothing stored,
 
 ## What it shows
 
-The review sits below WordPress's own comparison table. A header gives the version change (upgrade, downgrade or same version), a verdict, and how many files changed. Four tabs hold the rest.
+Patchmark takes over the "already installed" screen. Its top bar carries the brand, the zip you are reviewing, and WordPress's own **Cancel and go back** and **Replace current with uploaded** buttons. When the review has serious findings, Replace turns red and takes a second click. If WordPress refuses the replacement (PHP or WordPress too old), its reasons are shown at the top and Replace is disabled. Below the bar, a header gives the plugin, the version change (upgrade, downgrade or same version), a verdict and how many files changed. Four tabs hold the rest.
+
+WordPress's heading, progress lines, comparison table and buttons are hidden, not removed: the script switches the layout on, so without JavaScript the regular screen (with the extra header rows) still works. Notices from other plugins stay visible.
 
 ### Review
 
-Findings, most serious first. Each one says what was found, why it matters, and links to the file and line, which opens in the file browser with the line highlighted.
+Findings, most serious first, followed by the full plugin header side by side (everything WordPress's table showed, plus description, URIs, Update URI, text domain and required plugins, with changed fields marked) and WordPress's reminder to back up first. Each finding says what was found, why it matters, and links to the file and line, which opens in the file browser with the line highlighted.
 
 **Header and environment**
 
@@ -154,7 +156,7 @@ From a release zip: **Plugins › Add New › Upload Plugin**, choose `patchmark
 
 From source: see [Development](#development).
 
-Then upload any plugin you already have installed. The review appears under WordPress's table.
+Then upload any plugin you already have installed. Patchmark takes over the screen that follows.
 
 ## For developers
 

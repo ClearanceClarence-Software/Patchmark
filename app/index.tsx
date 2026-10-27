@@ -10,9 +10,15 @@ import '@fontsource/atkinson-hyperlegible-mono/latin-400.css';
 import '@fontsource/atkinson-hyperlegible-mono/latin-700.css';
 
 import App from './App';
+import { readCorePage, takeOver } from './lib/page';
 import './viewer.scss';
 
 const mount = document.getElementById( 'patchmark' );
 if ( mount && window.patchmarkReport ) {
-	createRoot( mount ).render( <App report={ window.patchmarkReport } /> );
+	// Read WordPress's links and messages before they are hidden.
+	const page = readCorePage();
+	takeOver();
+	createRoot( mount ).render(
+		<App report={ window.patchmarkReport } page={ page } />
+	);
 }

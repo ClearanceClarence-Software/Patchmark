@@ -48,6 +48,59 @@ export default function Findings( {
 				</ul>
 			) }
 
+			{ report.headers && report.headers.length > 0 && (
+				<section className="pmk-headers">
+					<h3>{ __( 'Plugin header', 'patchmark' ) }</h3>
+					<table className="pmk-header-table">
+						<thead>
+							<tr>
+								<th scope="col">
+									<span className="screen-reader-text">
+										{ __( 'Field', 'patchmark' ) }
+									</span>
+								</th>
+								<th scope="col">
+									{ __( 'Installed', 'patchmark' ) }
+								</th>
+								<th scope="col">
+									{ __( 'Uploaded', 'patchmark' ) }
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{ report.headers.map( ( h ) => {
+								// A new version number is the point of an update, so it isn't marked.
+								const differs =
+									h.key !== 'Version' &&
+									h.current !== h.uploaded;
+								return (
+									<tr
+										key={ h.key }
+										className={
+											differs ? 'is-different' : ''
+										}
+									>
+										<th scope="row">{ h.label }</th>
+										<td>{ h.current || '—' }</td>
+										<td>
+											{ h.uploaded || '—' }
+											{ differs && (
+												<span className="pmk-changed">
+													{ __(
+														'changed',
+														'patchmark'
+													) }
+												</span>
+											) }
+										</td>
+									</tr>
+								);
+							} ) }
+						</tbody>
+					</table>
+				</section>
+			) }
+
 			{ ( report.truncated || report.omitted > 0 ) && (
 				<p className="pmk-note">
 					{ report.truncated &&

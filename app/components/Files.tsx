@@ -318,9 +318,13 @@ export default function Files( {
 					type="button"
 					className="button"
 					onClick={ downloadPatch }
+					title={ __(
+						'Download the text changes as a patch for git apply',
+						'patchmark'
+					) }
 				>
 					<Dashicon name="download" />
-					{ __( 'Download .patch', 'patchmark' ) }
+					{ __( '.patch', 'patchmark' ) }
 				</button>
 			</div>
 

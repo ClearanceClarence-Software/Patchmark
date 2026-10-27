@@ -12,7 +12,7 @@ See exactly what a plugin zip changes before it replaces the installed copy: fil
 
 == Description ==
 
-When you upload a zip for a plugin that is already installed, WordPress shows a small table (name, version, author, requirements) and a button to replace it. Patchmark turns that screen into a proper review.
+When you upload a zip for a plugin that is already installed, WordPress shows a small table (name, version, author, requirements) and a button to replace it. Patchmark takes over that screen and turns it into a proper review, with Cancel and Replace in its top bar. When there are serious findings, Replace takes a second click.
 
 = Review =
 
@@ -50,7 +50,7 @@ A clean review is not a guarantee. Only install code from sources you trust.
 
 1. Install and activate Patchmark.
 2. Go to **Plugins › Add New › Upload Plugin** and upload a zip of a plugin you already have installed.
-3. Read the review below WordPress's comparison table, then choose **Replace current with uploaded** or **Cancel and go back**.
+3. Read the review, then choose **Replace current with uploaded** or **Cancel and go back** in its top bar.
 
 == Frequently Asked Questions ==
 
@@ -97,4 +97,4 @@ Patchmark bundles the Bricolage Grotesque font (Copyright 2022 The Bricolage Gro
 == Changelog ==
 
 = 1.0.0 =
-* First release: review, file browser with split and unified diffs, changelog and API changes on the "already installed" upload screen.
+* First release: takes over the "already installed" upload screen with a review, a file browser with split and unified diffs, the changelog in between and API changes.
