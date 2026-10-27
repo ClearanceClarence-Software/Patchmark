@@ -1,6 +1,6 @@
 import { __, _n, sprintf } from '@wordpress/i18n';
 
-import { num } from '../lib/format';
+import { num, versionDirection } from '../lib/format';
 import type { Finding, Report } from '../types';
 import { Dashicon, SEVERITY_ICONS } from './ui';
 
@@ -69,29 +69,28 @@ export default function Findings( {
 						</thead>
 						<tbody>
 							{ report.headers.map( ( h ) => {
-								// A new version number is the point of an update, so it isn't marked.
-								const differs =
-									h.key !== 'Version' &&
-									h.current !== h.uploaded;
+								// Version: green when it goes up, red when it goes down.
+								// Any other field that changed is bold.
+								let tone = '';
+								if ( h.key === 'Version' ) {
+									const dir = versionDirection(
+										h.current,
+										h.uploaded
+									);
+									if ( dir > 0 ) {
+										tone = 'is-up';
+									} else if ( dir < 0 ) {
+										tone = 'is-down';
+									}
+								} else if ( h.current !== h.uploaded ) {
+									tone = 'is-changed';
+								}
 								return (
-									<tr
-										key={ h.key }
-										className={
-											differs ? 'is-different' : ''
-										}
-									>
+									<tr key={ h.key }>
 										<th scope="row">{ h.label }</th>
 										<td>{ h.current || '—' }</td>
-										<td>
+										<td className={ tone }>
 											{ h.uploaded || '—' }
-											{ differs && (
-												<span className="pmk-changed">
-													{ __(
-														'changed',
-														'patchmark'
-													) }
-												</span>
-											) }
 										</td>
 									</tr>
 								);

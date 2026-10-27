@@ -1351,20 +1351,19 @@ body.pmk-takeover {
 		width: calc(50% - 90px);
 	}
 
-	tr.is-different td:last-child {
-		background: #fcf9e8;
+	td.is-changed {
+		font-weight: 700;
 	}
-}
 
-.pmk-changed {
-	display: inline-block;
-	margin-left: 8px;
-	padding: 0 6px;
-	font-size: 11px;
-	font-weight: 600;
-	color: var(--pmk-warn);
-	border: 1px solid #f0d68a;
-	border-radius: 3px;
+	td.is-up {
+		font-weight: 700;
+		color: var(--pmk-add);
+	}
+
+	td.is-down {
+		font-weight: 700;
+		color: var(--pmk-danger);
+	}
 }
 
 @media (max-width: 782px) {
