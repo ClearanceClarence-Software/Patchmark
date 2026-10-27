@@ -29,9 +29,15 @@ final class CodeScan {
 	);
 
 	/**
-	 * Hosts that are only ever documentation or schema references.
+	 * Hosts that are only ever documentation or schema references. WordPress's own domains
+	 * and their subdomains are matched by QUIET_SUFFIX instead.
 	 */
-	const QUIET_HOSTS = array( 'wordpress.org', 'www.wordpress.org', 'developer.wordpress.org', 'make.wordpress.org', 'api.wordpress.org', 'downloads.wordpress.org', 'w.org', 's.w.org', 'wp.org', 'www.w3.org', 'w3.org', 'schema.org', 'json-schema.org', 'www.gnu.org', 'gnu.org', 'opensource.org', 'creativecommons.org', 'php.net', 'www.php.net', 'secure.php.net', 'developer.mozilla.org', 'example.com', 'www.example.com', 'example.org', 'example.net', 'localhost', 'semver.org', 'keepachangelog.com', 'ogp.me', 'purl.org', 'xmlns.com', 'ns.adobe.com' );
+	const QUIET_HOSTS = array( 'www.w3.org', 'w3.org', 'schema.org', 'json-schema.org', 'www.gnu.org', 'gnu.org', 'opensource.org', 'creativecommons.org', 'php.net', 'www.php.net', 'secure.php.net', 'developer.mozilla.org', 'example.com', 'www.example.com', 'example.org', 'example.net', 'localhost', 'semver.org', 'keepachangelog.com', 'ogp.me', 'purl.org', 'xmlns.com', 'ns.adobe.com' );
+
+	/**
+	 * WordPress's own domains and their subdomains.
+	 */
+	const QUIET_SUFFIX = '/(^|\.)(wordpress|wp|w)\.org$/';
 
 	/**
 	 * Result of a scan.
@@ -412,7 +418,7 @@ final class CodeScan {
 		}
 		foreach ( $m[1] as $match ) {
 			$host = strtolower( $match[0] );
-			if ( in_array( $host, self::QUIET_HOSTS, true ) || preg_match( '/\.(test|local|localhost|invalid|example)$/', $host ) || ! preg_match( '/[a-z]/', $host ) ) {
+			if ( in_array( $host, self::QUIET_HOSTS, true ) || preg_match( self::QUIET_SUFFIX, $host ) || preg_match( '/\.(test|local|localhost|invalid|example)$/', $host ) || ! preg_match( '/[a-z]/', $host ) ) {
 				continue;
 			}
 			if ( ! isset( $out[ $host ] ) ) {

@@ -304,7 +304,7 @@ final class Review {
 		$requires_wp = $get( $up, 'RequiresWP' );
 		if ( '' !== $requires_wp && ! is_wp_version_compatible( $requires_wp ) ) {
 			/* translators: 1: required WordPress version, 2: installed WordPress version. */
-			$this->add( 'danger', 'wp', sprintf( __( 'Needs WordPress %1$s, this site runs %2$s', 'patchmark' ), $requires_wp, wp_get_wp_version() ), __( 'WordPress will refuse to install it.', 'patchmark' ) );
+			$this->add( 'danger', 'wp', sprintf( __( 'Needs WordPress %1$s, this site runs %2$s', 'patchmark' ), $requires_wp, get_bloginfo( 'version' ) ), __( 'WordPress will refuse to install it.', 'patchmark' ) );
 		}
 		if ( '' !== $requires_php && '' !== $get( $cur, 'RequiresPHP' ) && version_compare( $requires_php, $get( $cur, 'RequiresPHP' ), '>' ) && is_php_version_compatible( $requires_php ) ) {
 			/* translators: 1: old minimum, 2: new minimum. */
