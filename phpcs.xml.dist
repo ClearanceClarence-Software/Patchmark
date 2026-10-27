@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<ruleset name="Upload Diff">
+	<description>WordPress Coding Standards, including the escaping, sanitizing and nonce checks.</description>
+
+	<file>ccs-upload-diff.php</file>
+	<file>src</file>
+
+	<arg name="extensions" value="php"/>
+	<arg value="sp"/>
+
+	<rule ref="WordPress">
+		<!-- Classes are autoloaded from src/ by namespace, so file names follow the class names. -->
+		<exclude name="WordPress.Files.FileName"/>
+		<!-- Hook callbacks receive arguments they do not always use. -->
+		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+	</rule>
+
+	<config name="minimum_wp_version" value="6.6"/>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="ccs-upload-diff"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

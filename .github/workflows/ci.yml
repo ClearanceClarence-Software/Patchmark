@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint:js
+      - run: npm run zip
+      - name: PHP syntax check
+        run: for f in ccs-upload-diff.php $(find src -name '*.php'); do php -l "$f"; done
+      - name: PHPCS
+        run: |
+          composer global require --quiet --no-interaction wp-coding-standards/wpcs:"^3.1" dealerdirect/phpcodesniffer-composer-installer
+          "$(composer global config bin-dir --absolute)/phpcs" --standard=phpcs.xml.dist
+        env:
+          COMPOSER_ALLOW_SUPERUSER: 1
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ccs-upload-diff-plugin
+          path: dist/*.zip

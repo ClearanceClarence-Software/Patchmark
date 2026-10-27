@@ -1,0 +1,33 @@
+{
+  "name": "ccs-upload-diff",
+  "version": "1.0.0",
+  "description": "Review a plugin zip before it replaces the installed copy.",
+  "private": true,
+  "license": "GPL-2.0-or-later",
+  "author": "CC Software",
+  "homepage": "https://github.com/ClearanceClarence-Software/Upload-Diff",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ClearanceClarence-Software/Upload-Diff.git"
+  },
+  "bugs": "https://github.com/ClearanceClarence-Software/Upload-Diff/issues",
+  "scripts": {
+    "build": "wp-scripts build app/index.tsx",
+    "start": "wp-scripts start app/index.tsx",
+    "typecheck": "tsc --noEmit",
+    "lint:js": "wp-scripts lint-js app",
+    "zip": "npm run build && node scripts/zip.mjs"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@wordpress/scripts": "^35.0.0",
+    "archiver": "^7.0.1",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@fontsource/atkinson-hyperlegible-mono": "^5.3.0",
+    "@wordpress/element": "^10.0.0",
+    "@wordpress/i18n": "^7.0.0"
+  }
+}

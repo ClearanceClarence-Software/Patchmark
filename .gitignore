@@ -1,0 +1,11 @@
+node_modules/
+build/
+dist/
+*.zip
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+tests/e2e/.auth/
+test-results/
+playwright-report/
