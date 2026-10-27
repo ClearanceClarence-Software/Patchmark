@@ -1418,3 +1418,78 @@ body.pmk-takeover {
 		width: 110px;
 	}
 }
+
+// Syntax colors, in the GitHub light style, readable on the added and removed backgrounds.
+
+.pmk-code {
+	.tok-comment,
+	.tok-prolog,
+	.tok-doctype,
+	.tok-cdata {
+		color: #6e7781;
+		font-style: italic;
+	}
+
+	.tok-keyword,
+	.tok-important,
+	.tok-delimiter,
+	.tok-atrule,
+	.tok-boolean.tok-keyword {
+		color: #cf222e;
+	}
+
+	.tok-string,
+	.tok-char,
+	.tok-attr-value,
+	.tok-template-string,
+	.tok-regex,
+	.tok-url {
+		color: #0a3069;
+	}
+
+	.tok-number,
+	.tok-boolean,
+	.tok-constant,
+	.tok-property,
+	.tok-attr-name,
+	.tok-symbol {
+		color: #0550ae;
+	}
+
+	.tok-function,
+	.tok-function-definition {
+		color: #8250df;
+	}
+
+	.tok-class-name,
+	.tok-builtin,
+	.tok-variable,
+	.tok-namespace,
+	.tok-parameter {
+		color: #953800;
+	}
+
+	.tok-tag,
+	.tok-selector,
+	.tok-inserted {
+		color: #116329;
+	}
+
+	.tok-title,
+	.tok-bold {
+		font-weight: 700;
+	}
+
+	.tok-italic {
+		font-style: italic;
+	}
+
+	.tok-title {
+		color: #0550ae;
+	}
+
+	// A keyword inside a string interpolation keeps the string color.
+	.tok-string .tok-punctuation {
+		color: inherit;
+	}
+}

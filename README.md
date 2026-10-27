@@ -86,7 +86,7 @@ Findings, most serious first, followed by the full plugin header side by side (e
 </p>
 
 - **Folder tree** of every added, removed, modified, moved and whitespace-only file, with line counts. Single-child folders are compacted (`vendor/composer`).
-- **Split or unified diffs** with word-level highlights, unchanged runs folded behind "Show 12 unchanged lines", and an **Ignore whitespace** switch. Your layout choice is remembered.
+- **Split or unified diffs** with **syntax highlighting** and word-level highlights on top of it, unchanged runs folded behind "Show 12 unchanged lines", and an **Ignore whitespace** switch. Your layout choice is remembered.
 - **Moves** are detected: a removed file whose exact contents appear under a new name is shown once, as moved.
 - **Whitespace-only** changes (line endings, trailing spaces) are told apart from real ones.
 - **Images** are shown side by side, installed and uploaded, on a checkerboard.
@@ -230,6 +230,8 @@ Patchmark was called Upload Diff during development. Same plugin, new name.
 ## Credits
 
 Bricolage Grotesque (Copyright 2022 The Bricolage Grotesque Project Authors) and Atkinson Hyperlegible Next and Mono (Copyright 2020-2024 The Atkinson Hyperlegible Next / Mono Project Authors), all under the SIL Open Font License 1.1. Bundled in `build/fonts`, licenses in `licenses/`. Served from the plugin folder, never from Google.
+
+Syntax highlighting is [Prism](https://prismjs.com) (MIT), bundled. Each version of a file is highlighted as a whole, so comments and strings that span several lines are colored correctly, and the colors are then merged with the word-level change marks. Files over 400 KB, or with lines over 3,000 characters (minified bundles), are shown without colors.
 
 The line diff is Eugene W. Myers' O(ND) algorithm ("An O(ND) Difference Algorithm and Its Variations", 1986).
 

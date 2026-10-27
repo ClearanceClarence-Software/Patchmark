@@ -19,6 +19,11 @@ module.exports = {
 		...defaultConfig.optimization,
 		minimize: false,
 	},
+	// The size warning assumes minified output, and counts the RTL stylesheet
+	// as if both were loaded. Neither applies here: it's one wp-admin screen.
+	performance: {
+		hints: false,
+	},
 	module: {
 		...defaultConfig.module,
 		rules: defaultConfig.module.rules.map( ( rule ) =>

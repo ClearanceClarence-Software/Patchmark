@@ -27,7 +27,7 @@ PHP is read with the tokenizer, so `$db->exec()` or "eval" in a comment is not m
 = Files =
 
 * A folder tree of every added, removed, modified, moved and whitespace-only file, with line counts.
-* Split or unified diffs with word highlights, folded context you can expand, and an option to ignore whitespace.
+* Split or unified diffs with syntax highlighting (PHP, JavaScript, TypeScript, CSS, SCSS, JSON, HTML, YAML, SQL, Markdown and more), word highlights, folded context you can expand, and an option to ignore whitespace.
 * Before and after previews for images.
 * Filter by name or status, search inside the changed files, and step through files with j and k.
 * **Download .patch**: a git-style patch of the text changes that `git apply` applies to the installed copy.
@@ -93,6 +93,8 @@ To build it yourself you need Node 20 or newer:
 == Credits ==
 
 Patchmark bundles the Bricolage Grotesque font (Copyright 2022 The Bricolage Grotesque Project Authors) and the Atkinson Hyperlegible Next and Atkinson Hyperlegible Mono fonts (Copyright 2020-2024 The Atkinson Hyperlegible Next / Mono Project Authors), all licensed under the SIL Open Font License 1.1. The license texts are in the licenses/ folder. The fonts are served from the plugin folder, not from Google.
+
+Syntax highlighting uses Prism (https://prismjs.com), MIT license, bundled with the plugin.
 
 == Changelog ==
 

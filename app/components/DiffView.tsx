@@ -17,10 +17,28 @@ import {
 	type Row,
 } from '../lib/diff';
 import { bytes, num, sizeChange } from '../lib/format';
+import {
+	highlightLines,
+	languageFor,
+	segments,
+	type Span,
+} from '../lib/highlight';
 import type { FileEntry } from '../types';
 import { Dashicon, StatusBadge } from './ui';
 
 export type ViewMode = 'split' | 'unified';
+
+// Highlighted lines of each version, 0-based; null when a version isn't highlighted.
+interface Highlight {
+	old: Span[][] | null;
+	new: Span[][] | null;
+}
+
+// Token spans for a row: deleted lines come from the installed version, the rest from the
+// upload (unchanged rows show the uploaded text).
+function spansFor( hl: Highlight, r: Row ): Span[] | undefined {
+	return r.type === 'del' ? hl.old?.[ r.oldNo - 1 ] : hl.new?.[ r.newNo - 1 ];
+}
 
 const CONTEXT = 3;
 // Whole new or deleted files start with this many lines shown.
@@ -48,6 +66,13 @@ export default function DiffView( {
 		[ file, hasText, ignoreWhitespace ]
 	);
 	const s = useMemo( () => stats( rows ), [ rows ] );
+	const hl = useMemo< Highlight >( () => {
+		const lang = languageFor( file.path );
+		return {
+			old: hasText ? highlightLines( file.old ?? '', lang ) : null,
+			new: hasText ? highlightLines( file.new ?? '', lang ) : null,
+		};
+	}, [ file, hasText ] );
 	const [ expanded, setExpanded ] = useState< Set< number > >( new Set() );
 	const [ showAll, setShowAll ] = useState( false );
 	const body = useRef< HTMLDivElement >( null );
@@ -234,9 +259,15 @@ export default function DiffView( {
 								) : (
 									<Fragment key={ `rows-${ i }` }>
 										{ mode === 'split' && ! whole ? (
-											<SplitRows rows={ block.rows } />
+											<SplitRows
+												rows={ block.rows }
+												hl={ hl }
+											/>
 										) : (
-											<UnifiedRows rows={ block.rows } />
+											<UnifiedRows
+												rows={ block.rows }
+												hl={ hl }
+											/>
 										) }
 									</Fragment>
 								)
@@ -263,7 +294,7 @@ export default function DiffView( {
 }
 
 // Changed lines next to each other, with word highlights when a deleted and an added line pair up.
-function SplitRows( { rows }: { rows: Row[] } ) {
+function SplitRows( { rows, hl }: { rows: Row[]; hl: Highlight } ) {
 	const out: ReactElement[] = [];
 	let i = 0;
 	while ( i < rows.length ) {
@@ -276,9 +307,13 @@ function SplitRows( { rows }: { rows: Row[] } ) {
 					data-new={ r.newNo }
 				>
 					<td className="pmk-num">{ r.oldNo }</td>
-					<td className="pmk-line">{ r.text }</td>
+					<td className="pmk-line">
+						<Code text={ r.text } spans={ spansFor( hl, r ) } />
+					</td>
 					<td className="pmk-num">{ r.newNo }</td>
-					<td className="pmk-line">{ r.text }</td>
+					<td className="pmk-line">
+						<Code text={ r.text } spans={ spansFor( hl, r ) } />
+					</td>
 				</tr>
 			);
 			i++;
@@ -306,12 +341,13 @@ function SplitRows( { rows }: { rows: Row[] } ) {
 					<td
 						className={ `pmk-line${ d ? ' is-del' : ' is-blank' }` }
 					>
-						{ d &&
-							( words ? (
-								<Pieces pieces={ words[ 0 ] } />
-							) : (
-								d.text
-							) ) }
+						{ d && (
+							<Code
+								text={ d.text }
+								spans={ spansFor( hl, d ) }
+								pieces={ words?.[ 0 ] }
+							/>
+						) }
 					</td>
 					<td className={ `pmk-num${ a ? ' is-add' : ' is-blank' }` }>
 						{ a?.newNo ?? '' }
@@ -319,12 +355,13 @@ function SplitRows( { rows }: { rows: Row[] } ) {
 					<td
 						className={ `pmk-line${ a ? ' is-add' : ' is-blank' }` }
 					>
-						{ a &&
-							( words ? (
-								<Pieces pieces={ words[ 1 ] } />
-							) : (
-								a.text
-							) ) }
+						{ a && (
+							<Code
+								text={ a.text }
+								spans={ spansFor( hl, a ) }
+								pieces={ words?.[ 1 ] }
+							/>
+						) }
 					</td>
 				</tr>
 			);
@@ -333,7 +370,7 @@ function SplitRows( { rows }: { rows: Row[] } ) {
 	return <>{ out }</>;
 }
 
-function UnifiedRows( { rows }: { rows: Row[] } ) {
+function UnifiedRows( { rows, hl }: { rows: Row[]; hl: Highlight } ) {
 	// Word highlights for a run of deletions followed by the same number of additions.
 	const words = new Map< Row, Piece[] >();
 	let i = 0;
@@ -391,7 +428,11 @@ function UnifiedRows( { rows }: { rows: Row[] } ) {
 										? '−'
 										: ' ' }
 							</span>
-							{ pieces ? <Pieces pieces={ pieces } /> : r.text }
+							<Code
+								text={ r.text }
+								spans={ spansFor( hl, r ) }
+								pieces={ pieces }
+							/>
 						</td>
 					</tr>
 				);
@@ -400,16 +441,43 @@ function UnifiedRows( { rows }: { rows: Row[] } ) {
 	);
 }
 
-function Pieces( { pieces }: { pieces: Piece[] } ) {
+// One line of code: token colors from the highlighter, with the word-diff marks on top.
+function Code( {
+	text,
+	spans,
+	pieces,
+}: {
+	text: string;
+	spans?: Span[];
+	pieces?: Piece[] | null;
+} ) {
+	if ( ! spans && ! pieces ) {
+		return <>{ text }</>;
+	}
 	return (
 		<>
-			{ pieces.map( ( p, i ) =>
-				p.changed ? (
-					<mark key={ i }>{ p.text }</mark>
+			{ segments( text, spans, pieces ).map( ( seg, i ) => {
+				const cls = seg.types
+					? seg.types
+							.split( ' ' )
+							.map( ( t ) => `tok-${ t }` )
+							.join( ' ' )
+					: '';
+				if ( seg.changed ) {
+					return (
+						<mark key={ i } className={ cls || undefined }>
+							{ seg.text }
+						</mark>
+					);
+				}
+				return cls ? (
+					<span key={ i } className={ cls }>
+						{ seg.text }
+					</span>
 				) : (
-					<Fragment key={ i }>{ p.text }</Fragment>
-				)
-			) }
+					<Fragment key={ i }>{ seg.text }</Fragment>
+				);
+			} ) }
 		</>
 	);
 }
