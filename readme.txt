@@ -1,6 +1,6 @@
-=== Upload Diff ===
+=== Patchmark ===
 Contributors: cccode
-Tags: plugin update, diff, security, changelog, upload
+Tags: plugin update, diff, security, changelog, code review
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -12,7 +12,7 @@ See exactly what a plugin zip changes before it replaces the installed copy: fil
 
 == Description ==
 
-When you upload a zip for a plugin that is already installed, WordPress shows a small table (name, version, author, requirements) and a button to replace it. Upload Diff turns that screen into a proper review.
+When you upload a zip for a plugin that is already installed, WordPress shows a small table (name, version, author, requirements) and a button to replace it. Patchmark turns that screen into a proper review.
 
 = Review =
 
@@ -48,7 +48,7 @@ A clean review is not a guarantee. Only install code from sources you trust.
 
 == Installation ==
 
-1. Install and activate Upload Diff.
+1. Install and activate Patchmark.
 2. Go to **Plugins › Add New › Upload Plugin** and upload a zip of a plugin you already have installed.
 3. Read the review below WordPress's comparison table, then choose **Replace current with uploaded** or **Cancel and go back**.
 
@@ -81,7 +81,7 @@ No. It points at changes worth reading. It can't prove a plugin is safe, and it 
 
 The files in build/ are compiled from TypeScript and SCSS but not minified, so you can read them as they are.
 
-The source code and build setup are on GitHub: https://github.com/ClearanceClarence-Software/Upload-Diff
+The source code and build setup are on GitHub: https://github.com/ClearanceClarence-Software/Patchmark
 
 To build it yourself you need Node 20 or newer:
 
@@ -92,7 +92,7 @@ To build it yourself you need Node 20 or newer:
 
 == Credits ==
 
-Upload Diff bundles the Atkinson Hyperlegible Mono font (Copyright 2020-2024 The Atkinson Hyperlegible Next / Mono Project Authors), licensed under the SIL Open Font License 1.1. The license text is in the licenses/ folder. The font is served from the plugin folder, not from Google.
+Patchmark bundles the Bricolage Grotesque font (Copyright 2022 The Bricolage Grotesque Project Authors) and the Atkinson Hyperlegible Next and Atkinson Hyperlegible Mono fonts (Copyright 2020-2024 The Atkinson Hyperlegible Next / Mono Project Authors), all licensed under the SIL Open Font License 1.1. The license texts are in the licenses/ folder. The fonts are served from the plugin folder, not from Google.
 
 == Changelog ==
 

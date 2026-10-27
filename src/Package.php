@@ -2,10 +2,10 @@
 /**
  * One side of the comparison: the installed plugin folder, or the unpacked upload.
  *
- * @package UploadDiff
+ * @package Patchmark
  */
 
-namespace ClearanceClarence\UploadDiff;
+namespace ClearanceClarence\Patchmark;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -204,7 +204,7 @@ final class Package {
 		 *
 		 * @param string[] $names Names.
 		 */
-		$ignore = (array) apply_filters( 'ccs_upload_diff_ignore', array( '.git', '.svn', '.hg', '.idea', '.vscode', 'node_modules', '.DS_Store', 'Thumbs.db', '__MACOSX' ) );
+		$ignore = (array) apply_filters( 'patchmark_ignore', array( '.git', '.svn', '.hg', '.idea', '.vscode', 'node_modules', '.DS_Store', 'Thumbs.db', '__MACOSX' ) );
 
 		foreach ( $entries as $name => $info ) {
 			$name = (string) $name;

@@ -2,10 +2,10 @@
 /**
  * File-by-file comparison of two packages.
  *
- * @package UploadDiff
+ * @package Patchmark
  */
 
-namespace ClearanceClarence\UploadDiff;
+namespace ClearanceClarence\Patchmark;
 
 defined( 'ABSPATH' ) || exit;
 

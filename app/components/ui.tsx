@@ -14,11 +14,13 @@ export function Dashicon( { name, label }: { name: string; label?: string } ) {
 	);
 }
 
-// The CC Software hex well, with a red and a green bar: two versions, side by side.
+// The CC Software hex well, as in Routemark, holding a diff: a removed line, an added line
+// that ends in Routemark's marker, and an unchanged line. Always graphite inside, so it works
+// on light and dark backgrounds.
 export function Mark( { size = 28 }: { size?: number } ) {
 	return (
 		<svg
-			className="ccs-ud-mark"
+			className="pmk-mark"
 			width={ size }
 			height={ size }
 			viewBox="0 0 48 48"
@@ -31,24 +33,26 @@ export function Mark( { size = 28 }: { size?: number } ) {
 				fill="#16181b"
 			/>
 			<rect
-				x="15"
-				y="17.5"
+				x="14.5"
+				y="16.6"
 				width="13"
 				height="3.2"
 				rx="1.6"
 				fill="#f87171"
 			/>
 			<rect
-				x="20"
-				y="23.4"
-				width="13"
+				x="14.5"
+				y="22.4"
+				width="13.5"
 				height="3.2"
 				rx="1.6"
 				fill="#4ade80"
 			/>
+			<circle cx="32.2" cy="24" r="3.6" fill="#ffffff" />
+			<circle cx="32.2" cy="24" r="1.5" fill="#1e40af" />
 			<rect
-				x="15"
-				y="29.3"
+				x="14.5"
+				y="28.2"
 				width="9"
 				height="3.2"
 				rx="1.6"
@@ -59,11 +63,11 @@ export function Mark( { size = 28 }: { size?: number } ) {
 }
 
 export const STATUS_LABELS: Record< Status, string > = {
-	added: __( 'Added', 'ccs-upload-diff' ),
-	removed: __( 'Removed', 'ccs-upload-diff' ),
-	renamed: __( 'Moved', 'ccs-upload-diff' ),
-	modified: __( 'Modified', 'ccs-upload-diff' ),
-	whitespace: __( 'Whitespace only', 'ccs-upload-diff' ),
+	added: __( 'Added', 'patchmark' ),
+	removed: __( 'Removed', 'patchmark' ),
+	renamed: __( 'Moved', 'patchmark' ),
+	modified: __( 'Modified', 'patchmark' ),
+	whitespace: __( 'Whitespace only', 'patchmark' ),
 };
 
 // One letter per status, as in git.
@@ -84,7 +88,7 @@ export function StatusBadge( {
 } ) {
 	return (
 		<span
-			className={ `ccs-ud-status is-${ status }` }
+			className={ `pmk-status is-${ status }` }
 			title={ short ? STATUS_LABELS[ status ] : undefined }
 		>
 			{ short ? STATUS_LETTERS[ status ] : STATUS_LABELS[ status ] }
@@ -108,12 +112,10 @@ export function Empty( {
 	children?: ReactNode;
 } ) {
 	return (
-		<div className="ccs-ud-empty">
+		<div className="pmk-empty">
 			<Dashicon name={ icon } />
-			<p className="ccs-ud-empty-title">{ title }</p>
-			{ children && (
-				<div className="ccs-ud-empty-body">{ children }</div>
-			) }
+			<p className="pmk-empty-title">{ title }</p>
+			{ children && <div className="pmk-empty-body">{ children }</div> }
 		</div>
 	);
 }

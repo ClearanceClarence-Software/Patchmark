@@ -49,25 +49,25 @@ export default function App( { report }: { report: Report } ) {
 		() => [
 			{
 				id: 'review' as const,
-				label: __( 'Review', 'ccs-upload-diff' ),
+				label: __( 'Review', 'patchmark' ),
 				count: report.findings.length,
 				tone: danger ? 'danger' : warn ? 'warn' : '',
 			},
 			{
 				id: 'files' as const,
-				label: __( 'Files', 'ccs-upload-diff' ),
+				label: __( 'Files', 'patchmark' ),
 				count: changed,
 				tone: '',
 			},
 			{
 				id: 'changelog' as const,
-				label: __( 'Changelog', 'ccs-upload-diff' ),
+				label: __( 'Changelog', 'patchmark' ),
 				count: changelogCount,
 				tone: '',
 			},
 			{
 				id: 'api' as const,
-				label: __( 'API changes', 'ccs-upload-diff' ),
+				label: __( 'API changes', 'patchmark' ),
 				count: api.total,
 				tone: api.removed ? 'warn' : '',
 			},
@@ -90,16 +90,14 @@ export default function App( { report }: { report: Report } ) {
 		if ( next >= 0 ) {
 			e.preventDefault();
 			setTab( tabs[ next ].id );
-			document
-				.getElementById( `ccs-ud-tab-${ tabs[ next ].id }` )
-				?.focus();
+			document.getElementById( `pmk-tab-${ tabs[ next ].id }` )?.focus();
 		}
 	};
 
 	let verdict;
 	if ( danger ) {
 		verdict = (
-			<span className="ccs-ud-verdict is-danger">
+			<span className="pmk-verdict is-danger">
 				<Dashicon name="warning" />
 				{ sprintf(
 					/* translators: %d: number of serious findings */
@@ -107,7 +105,7 @@ export default function App( { report }: { report: Report } ) {
 						'%d serious finding',
 						'%d serious findings',
 						danger,
-						'ccs-upload-diff'
+						'patchmark'
 					),
 					danger
 				) }
@@ -115,7 +113,7 @@ export default function App( { report }: { report: Report } ) {
 		);
 	} else if ( warn ) {
 		verdict = (
-			<span className="ccs-ud-verdict is-warn">
+			<span className="pmk-verdict is-warn">
 				<Dashicon name="flag" />
 				{ sprintf(
 					/* translators: %d: number of findings to check */
@@ -123,7 +121,7 @@ export default function App( { report }: { report: Report } ) {
 						'%d thing to check',
 						'%d things to check',
 						warn,
-						'ccs-upload-diff'
+						'patchmark'
 					),
 					warn
 				) }
@@ -131,29 +129,43 @@ export default function App( { report }: { report: Report } ) {
 		);
 	} else {
 		verdict = (
-			<span className="ccs-ud-verdict is-ok">
+			<span className="pmk-verdict is-ok">
 				<Dashicon name="yes-alt" />
-				{ __( 'Nothing unusual found', 'ccs-upload-diff' ) }
+				{ __( 'Nothing unusual found', 'patchmark' ) }
 			</span>
 		);
 	}
 
 	return (
-		<div className="ccs-ud">
-			<header className="ccs-ud-head">
-				<div className="ccs-ud-brand">
-					<Mark />
+		<div className="pmk">
+			<div className="pmk-topbar">
+				<span className="pmk-brand">
+					<Mark size={ 26 } />
+					<span className="pmk-brand-name">
+						Patch<em>mark</em>
+					</span>
+					<span className="pmk-brand-version">
+						{ report.version }
+					</span>
+				</span>
+				<span className="pmk-topbar-note">
+					{ __(
+						'What the upload changes, before it replaces the installed copy',
+						'patchmark'
+					) }
+				</span>
+			</div>
+			<header className="pmk-head">
+				<div className="pmk-headline">
 					<div>
-						<h2 className="ccs-ud-title">
-							{ __( 'What changes', 'ccs-upload-diff' ) }
-						</h2>
-						<p className="ccs-ud-sub">
-							<span className="ccs-ud-version">
+						<h2 className="pmk-title">{ plugin.name }</h2>
+						<p className="pmk-sub">
+							<span className="pmk-version">
 								{ plugin.oldVersion || '?' }
 							</span>
 							<Dashicon name="arrow-right-alt" />
 							<span
-								className={ `ccs-ud-version is-${
+								className={ `pmk-version is-${
 									direction > 0
 										? 'up'
 										: direction < 0
@@ -163,36 +175,36 @@ export default function App( { report }: { report: Report } ) {
 							>
 								{ plugin.newVersion || '?' }
 							</span>
-							<span className="ccs-ud-direction">
+							<span className="pmk-direction">
 								{ direction > 0 &&
-									__( 'upgrade', 'ccs-upload-diff' ) }
+									__( 'upgrade', 'patchmark' ) }
 								{ direction < 0 &&
-									__( 'downgrade', 'ccs-upload-diff' ) }
+									__( 'downgrade', 'patchmark' ) }
 								{ direction === 0 &&
-									__( 'same version', 'ccs-upload-diff' ) }
+									__( 'same version', 'patchmark' ) }
 							</span>
 						</p>
 					</div>
 				</div>
 				{ verdict }
-				<dl className="ccs-ud-stats">
+				<dl className="pmk-stats">
 					<div>
-						<dt>{ __( 'Files changed', 'ccs-upload-diff' ) }</dt>
+						<dt>{ __( 'Files changed', 'patchmark' ) }</dt>
 						<dd>
 							{ num( changed ) }
-							<span className="ccs-ud-muted">
+							<span className="pmk-muted">
 								{ ' ' }
 								{ sprintf(
 									/* translators: %s: number of unchanged files */
-									__( 'of %s', 'ccs-upload-diff' ),
+									__( 'of %s', 'patchmark' ),
 									num( changed + c.unchanged )
 								) }
 							</span>
 						</dd>
 					</div>
 					<div>
-						<dt>{ __( 'Breakdown', 'ccs-upload-diff' ) }</dt>
-						<dd className="ccs-ud-breakdown">
+						<dt>{ __( 'Breakdown', 'patchmark' ) }</dt>
+						<dd className="pmk-breakdown">
 							<span className="is-added">
 								+{ num( c.added ) }
 							</span>
@@ -210,10 +222,10 @@ export default function App( { report }: { report: Report } ) {
 						</dd>
 					</div>
 					<div>
-						<dt>{ __( 'Size', 'ccs-upload-diff' ) }</dt>
+						<dt>{ __( 'Size', 'patchmark' ) }</dt>
 						<dd>
 							{ bytes( report.bytes.new ) }
-							<span className="ccs-ud-muted">
+							<span className="pmk-muted">
 								{ ' ' }
 								(
 								{ sizeChange(
@@ -229,26 +241,26 @@ export default function App( { report }: { report: Report } ) {
 
 			{ /* eslint-disable-next-line jsx-a11y/interactive-supports-focus */ }
 			<div
-				className="ccs-ud-tabs"
+				className="pmk-tabs"
 				role="tablist"
-				aria-label={ __( 'Upload review', 'ccs-upload-diff' ) }
+				aria-label={ __( 'Upload review', 'patchmark' ) }
 				onKeyDown={ onTabKey }
 			>
 				{ tabs.map( ( t ) => (
 					<button
 						key={ t.id }
-						id={ `ccs-ud-tab-${ t.id }` }
+						id={ `pmk-tab-${ t.id }` }
 						type="button"
 						role="tab"
 						aria-selected={ tab === t.id }
-						aria-controls={ `ccs-ud-panel-${ t.id }` }
+						aria-controls={ `pmk-panel-${ t.id }` }
 						tabIndex={ tab === t.id ? 0 : -1 }
-						className={ `ccs-ud-tab${ tab === t.id ? ' is-active' : '' }` }
+						className={ `pmk-tab${ tab === t.id ? ' is-active' : '' }` }
 						onClick={ () => setTab( t.id ) }
 					>
 						{ t.label }
 						<span
-							className={ `ccs-ud-count${ t.tone ? ` is-${ t.tone }` : '' }` }
+							className={ `pmk-count${ t.tone ? ` is-${ t.tone }` : '' }` }
 						>
 							{ num( t.count ) }
 						</span>
@@ -257,10 +269,10 @@ export default function App( { report }: { report: Report } ) {
 			</div>
 
 			<div
-				className="ccs-ud-panel"
+				className="pmk-panel"
 				role="tabpanel"
-				id={ `ccs-ud-panel-${ tab }` }
-				aria-labelledby={ `ccs-ud-tab-${ tab }` }
+				id={ `pmk-panel-${ tab }` }
+				aria-labelledby={ `pmk-tab-${ tab }` }
 			>
 				{ tab === 'review' && (
 					<Findings report={ report } onOpen={ open } />
@@ -272,12 +284,12 @@ export default function App( { report }: { report: Report } ) {
 				{ tab === 'api' && <ApiChanges api={ report.api } /> }
 			</div>
 
-			<p className="ccs-ud-foot">
+			<p className="pmk-foot">
 				{ sprintf(
 					/* translators: 1: milliseconds, 2: plugin folder */
 					__(
 						'Compared in %1$s ms. Folder: %2$s. Nothing is stored; leaving this page discards the review.',
-						'ccs-upload-diff'
+						'patchmark'
 					),
 					num( report.ms ),
 					plugin.folder

@@ -13,7 +13,7 @@ export default function Changelog( { report }: { report: Report } ) {
 				icon="media-text"
 				title={ __(
 					'No changelog entries between these versions.',
-					'ccs-upload-diff'
+					'patchmark'
 				) }
 			>
 				{ log
@@ -21,27 +21,27 @@ export default function Changelog( { report }: { report: Report } ) {
 							/* translators: %s: file name */
 							__(
 								'%s has a changelog, but no entry for a version after the installed one.',
-								'ccs-upload-diff'
+								'patchmark'
 							),
 							log.source
 						)
 					: __(
 							'The upload has no readme.txt or CHANGELOG.md to read it from.',
-							'ccs-upload-diff'
+							'patchmark'
 						) }
 			</Empty>
 		);
 	}
 
 	return (
-		<div className="ccs-ud-changelog">
-			<p className="ccs-ud-note">
+		<div className="pmk-changelog">
+			<p className="pmk-note">
 				{ log.downgrade
 					? sprintf(
 							/* translators: 1: installed version, 2: uploaded version, 3: file name */
 							__(
 								'Going back from %1$s to %2$s removes these changes (from the installed %3$s):',
-								'ccs-upload-diff'
+								'patchmark'
 							),
 							oldVersion,
 							newVersion,
@@ -51,7 +51,7 @@ export default function Changelog( { report }: { report: Report } ) {
 							/* translators: 1: installed version, 2: uploaded version, 3: file name */
 							__(
 								'Changes after %1$s, up to %2$s, from %3$s:',
-								'ccs-upload-diff'
+								'patchmark'
 							),
 							oldVersion || '?',
 							newVersion || '?',
@@ -60,11 +60,11 @@ export default function Changelog( { report }: { report: Report } ) {
 			</p>
 
 			{ log.notice && (
-				<div className="ccs-ud-callout is-warn">
+				<div className="pmk-callout is-warn">
 					<Dashicon name="megaphone" />
 					<div>
 						<strong>
-							{ __( 'Upgrade notice:', 'ccs-upload-diff' ) }
+							{ __( 'Upgrade notice:', 'patchmark' ) }
 						</strong>{ ' ' }
 						<Inline text={ log.notice } />
 					</div>
@@ -73,22 +73,19 @@ export default function Changelog( { report }: { report: Report } ) {
 
 			{ log.entries.map( ( entry, i ) => (
 				<section
-					className="ccs-ud-release"
+					className="pmk-release"
 					key={ `${ entry.heading }-${ i }` }
 				>
 					<h3>
 						{ entry.version || entry.heading }
 						{ entry.date && (
-							<span className="ccs-ud-muted">
-								{ ' ' }
-								{ entry.date }
-							</span>
+							<span className="pmk-muted"> { entry.date }</span>
 						) }
 					</h3>
 					<ul>
 						{ entry.lines.map( ( line, j ) =>
 							line.type === 'group' ? (
-								<li key={ j } className="ccs-ud-release-group">
+								<li key={ j } className="pmk-release-group">
 									{ line.text }
 								</li>
 							) : (
@@ -107,13 +104,10 @@ export default function Changelog( { report }: { report: Report } ) {
 			) ) }
 
 			{ log.more > 0 && (
-				<p className="ccs-ud-note">
+				<p className="pmk-note">
 					{ sprintf(
 						/* translators: %d: number of older entries */
-						__(
-							'%d older entries are not shown.',
-							'ccs-upload-diff'
-						),
+						__( '%d older entries are not shown.', 'patchmark' ),
 						log.more
 					) }
 				</p>

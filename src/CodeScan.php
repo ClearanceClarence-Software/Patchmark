@@ -3,10 +3,10 @@
  * Reads one source file: what it declares, which hooks and routes it registers, and code that
  * deserves a second look.
  *
- * @package UploadDiff
+ * @package Patchmark
  */
 
-namespace ClearanceClarence\UploadDiff;
+namespace ClearanceClarence\Patchmark;
 
 defined( 'ABSPATH' ) || exit;
 

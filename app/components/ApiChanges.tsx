@@ -4,14 +4,14 @@ import type { Report, SymbolKind } from '../types';
 import { Dashicon, Empty } from './ui';
 
 const KINDS: Array< [ SymbolKind, string ] > = [
-	[ 'functions', __( 'Functions', 'ccs-upload-diff' ) ],
-	[ 'classes', __( 'Classes', 'ccs-upload-diff' ) ],
-	[ 'methods', __( 'Public methods', 'ccs-upload-diff' ) ],
-	[ 'hooks', __( 'Hooks it fires', 'ccs-upload-diff' ) ],
-	[ 'routes', __( 'REST routes', 'ccs-upload-diff' ) ],
-	[ 'shortcodes', __( 'Shortcodes', 'ccs-upload-diff' ) ],
-	[ 'post_types', __( 'Post types', 'ccs-upload-diff' ) ],
-	[ 'blocks', __( 'Blocks', 'ccs-upload-diff' ) ],
+	[ 'functions', __( 'Functions', 'patchmark' ) ],
+	[ 'classes', __( 'Classes', 'patchmark' ) ],
+	[ 'methods', __( 'Public methods', 'patchmark' ) ],
+	[ 'hooks', __( 'Hooks it fires', 'patchmark' ) ],
+	[ 'routes', __( 'REST routes', 'patchmark' ) ],
+	[ 'shortcodes', __( 'Shortcodes', 'patchmark' ) ],
+	[ 'post_types', __( 'Post types', 'patchmark' ) ],
+	[ 'blocks', __( 'Blocks', 'patchmark' ) ],
 ];
 
 type Api = Report[ 'api' ];
@@ -40,21 +40,21 @@ export default function ApiChanges( { api }: { api: Api } ) {
 				icon="editor-code"
 				title={ __(
 					'No functions, classes, hooks or routes were added or removed.',
-					'ccs-upload-diff'
+					'patchmark'
 				) }
 			>
 				{ __(
 					'Code that calls into this plugin, such as a theme or another plugin, keeps working as far as names go.',
-					'ccs-upload-diff'
+					'patchmark'
 				) }
 			</Empty>
 		);
 	}
 
 	return (
-		<div className="ccs-ud-api">
+		<div className="pmk-api">
 			{ removed > 0 && (
-				<div className="ccs-ud-callout is-warn">
+				<div className="pmk-callout is-warn">
 					<Dashicon name="flag" />
 					<div>
 						<strong>
@@ -64,51 +64,48 @@ export default function ApiChanges( { api }: { api: Api } ) {
 									'%d name is removed.',
 									'%d names are removed.',
 									removed,
-									'ccs-upload-diff'
+									'patchmark'
 								),
 								removed
 							) }
 						</strong>{ ' ' }
 						{ __(
 							'A theme, snippet or other plugin that uses one of them will fail or silently stop working after the replacement. Search your site’s code for them first.',
-							'ccs-upload-diff'
+							'patchmark'
 						) }
 					</div>
 				</div>
 			) }
 
-			<div className="ccs-ud-api-cols">
+			<div className="pmk-api-cols">
 				<Side
-					title={ __( 'Removed', 'ccs-upload-diff' ) }
+					title={ __( 'Removed', 'patchmark' ) }
 					tone="removed"
 					data={ api.removed }
 				/>
 				<Side
-					title={ __( 'Added', 'ccs-upload-diff' ) }
+					title={ __( 'Added', 'patchmark' ) }
 					tone="added"
 					data={ api.added }
 				/>
 			</div>
 
 			{ api.libraries.length > 0 && (
-				<section className="ccs-ud-api-libs">
+				<section className="pmk-api-libs">
 					<h3>
-						{ __(
-							'Bundled libraries (Composer)',
-							'ccs-upload-diff'
-						) }
+						{ __( 'Bundled libraries (Composer)', 'patchmark' ) }
 					</h3>
 					<table className="widefat striped">
 						<thead>
 							<tr>
 								<th scope="col">
-									{ __( 'Package', 'ccs-upload-diff' ) }
+									{ __( 'Package', 'patchmark' ) }
 								</th>
 								<th scope="col">
-									{ __( 'Installed', 'ccs-upload-diff' ) }
+									{ __( 'Installed', 'patchmark' ) }
 								</th>
 								<th scope="col">
-									{ __( 'Uploaded', 'ccs-upload-diff' ) }
+									{ __( 'Uploaded', 'patchmark' ) }
 								</th>
 							</tr>
 						</thead>
@@ -121,11 +118,8 @@ export default function ApiChanges( { api }: { api: Api } ) {
 									<td>{ lib.from ?? '—' }</td>
 									<td>
 										{ lib.to ?? (
-											<span className="ccs-ud-muted">
-												{ __(
-													'removed',
-													'ccs-upload-diff'
-												) }
+											<span className="pmk-muted">
+												{ __( 'removed', 'patchmark' ) }
 											</span>
 										) }
 									</td>
@@ -136,16 +130,16 @@ export default function ApiChanges( { api }: { api: Api } ) {
 				</section>
 			) }
 
-			<p className="ccs-ud-note">
+			<p className="pmk-note">
 				{ __(
 					'Read from the PHP in files that changed. Names built at runtime (for example hooks with a variable name) are shown as written in the code.',
-					'ccs-upload-diff'
+					'patchmark'
 				) }
 				{ api.partial &&
 					' ' +
 						__(
 							'Some very large files were not read.',
-							'ccs-upload-diff'
+							'patchmark'
 						) }
 			</p>
 		</div>
@@ -163,22 +157,18 @@ function Side( {
 } ) {
 	const kinds = KINDS.filter( ( [ k ] ) => data[ k ]?.length );
 	return (
-		<section className={ `ccs-ud-api-side is-${ tone }` }>
+		<section className={ `pmk-api-side is-${ tone }` }>
 			<h3>{ title }</h3>
 			{ kinds.length === 0 && (
-				<p className="ccs-ud-muted">
-					{ __( 'Nothing', 'ccs-upload-diff' ) }
-				</p>
+				<p className="pmk-muted">{ __( 'Nothing', 'patchmark' ) }</p>
 			) }
 			{ kinds.map( ( [ kind, label ] ) => {
 				const list = data[ kind ] ?? [];
 				return (
-					<div key={ kind } className="ccs-ud-api-group">
+					<div key={ kind } className="pmk-api-group">
 						<h4>
 							{ label }{ ' ' }
-							<span className="ccs-ud-muted">
-								{ list.length }
-							</span>
+							<span className="pmk-muted">{ list.length }</span>
 						</h4>
 						<ul>
 							{ list.slice( 0, MAX_SHOWN ).map( ( name ) => (
@@ -187,10 +177,10 @@ function Side( {
 								</li>
 							) ) }
 							{ list.length > MAX_SHOWN && (
-								<li className="ccs-ud-muted">
+								<li className="pmk-muted">
 									{ sprintf(
 										/* translators: %d: number of more names */
-										__( 'and %d more', 'ccs-upload-diff' ),
+										__( 'and %d more', 'patchmark' ),
 										list.length - MAX_SHOWN
 									) }
 								</li>

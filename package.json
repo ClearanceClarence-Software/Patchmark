@@ -1,16 +1,16 @@
 {
-  "name": "ccs-upload-diff",
+  "name": "patchmark",
   "version": "1.0.0",
   "description": "Review a plugin zip before it replaces the installed copy.",
   "private": true,
   "license": "GPL-2.0-or-later",
   "author": "CC Software",
-  "homepage": "https://github.com/ClearanceClarence-Software/Upload-Diff",
+  "homepage": "https://github.com/ClearanceClarence-Software/Patchmark",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ClearanceClarence-Software/Upload-Diff.git"
+    "url": "https://github.com/ClearanceClarence-Software/Patchmark.git"
   },
-  "bugs": "https://github.com/ClearanceClarence-Software/Upload-Diff/issues",
+  "bugs": "https://github.com/ClearanceClarence-Software/Patchmark/issues",
   "scripts": {
     "build": "wp-scripts build app/index.tsx",
     "start": "wp-scripts start app/index.tsx",
@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "@fontsource/atkinson-hyperlegible-mono": "^5.3.0",
+    "@fontsource/atkinson-hyperlegible-next": "^5.3.0",
+    "@fontsource/bricolage-grotesque": "^5.3.0",
     "@wordpress/element": "^10.0.0",
     "@wordpress/i18n": "^7.0.0"
   }

@@ -1,12 +1,12 @@
 <p align="center">
-  <img src=".wordpress-org/banner-1544x500.png" alt="Upload Diff: see exactly what a plugin zip changes before it replaces the installed copy, by CC Software" width="772">
+  <img src=".wordpress-org/banner-1544x500.png" alt="Patchmark: see exactly what a plugin zip changes before it replaces the installed copy, by CC Software" width="772">
 </p>
 
 <p align="center">
-  <a href="https://github.com/ClearanceClarence-Software/Upload-Diff/actions/workflows/ci.yml"><img src="https://github.com/ClearanceClarence-Software/Upload-Diff/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/ClearanceClarence-Software/Patchmark/actions/workflows/ci.yml"><img src="https://github.com/ClearanceClarence-Software/Patchmark/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 </p>
 
-Upload Diff is a WordPress plugin for the moment just before you replace a plugin with a zip. When you upload a plugin that is already installed, WordPress shows a five-row table and a **Replace current with uploaded** button. Upload Diff adds what that table leaves out: every file that changed, line by line; anything in the new code that deserves a second look; the changelog between the two versions; and the functions, hooks and routes the upload adds or removes.
+Patchmark is a WordPress plugin for the moment just before you replace a plugin with a zip. When you upload a plugin that is already installed, WordPress shows a five-row table and a **Replace current with uploaded** button. Patchmark adds what that table leaves out: every file that changed, line by line; anything in the new code that deserves a second look; the changelog between the two versions; and the functions, hooks and routes the upload adds or removes.
 
 It is built for anyone who updates plugins by hand: premium plugins delivered as zips, client sites where a vendor emails "the fixed version", your own plugins between releases, or a zip from a forum that you would rather read before you run.
 
@@ -119,7 +119,7 @@ Removed names are the ones that break a theme, a snippet or another plugin that 
 
 WordPress unpacks an uploaded zip into `wp-content/upgrade/`, runs `upgrader_source_selection`, notices that the plugin folder already exists, **deletes the unpacked files**, and then shows the comparison screen. So there is one short window where both copies are on disk.
 
-Upload Diff hooks `upgrader_source_selection` at priority 999 (after core's own package check and after plugins that rename GitHub-style folders) and does all its work there:
+Patchmark hooks `upgrader_source_selection` at priority 999 (after core's own package check and after plugins that rename GitHub-style folders) and does all its work there:
 
 1. **List** both folders and hash every file with `md5_file()`, without loading it. Version-control and editor clutter (`.git`, `node_modules`, `.DS_Store`, `__MACOSX`) is skipped.
 2. **Compare** by hash. Only files whose hash differs are read: to tell whitespace-only changes from real ones, to scan the code, and to send the contents to the viewer.
@@ -150,7 +150,7 @@ The code checks point at changes worth reading. They are not a malware scanner, 
 
 ## Install
 
-From a release zip: **Plugins › Add New › Upload Plugin**, choose `ccs-upload-diff-<version>.zip`, activate.
+From a release zip: **Plugins › Add New › Upload Plugin**, choose `patchmark-<version>.zip`, activate.
 
 From source: see [Development](#development).
 
@@ -160,10 +160,10 @@ Then upload any plugin you already have installed. The review appears under Word
 
 **Filters**
 
-`ccs_upload_diff_ignore` changes which file and folder names are left out of the comparison.
+`patchmark_ignore` changes which file and folder names are left out of the comparison.
 
 ```php
-add_filter( 'ccs_upload_diff_ignore', function ( $names ) {
+add_filter( 'patchmark_ignore', function ( $names ) {
 	$names[] = 'tests';
 	return $names;
 } );
@@ -186,7 +186,7 @@ npm install
 npm start          # watch build while developing
 npm run typecheck
 npm run lint:js
-npm run zip        # build + dist/ccs-upload-diff-<version>.zip
+npm run zip        # build + dist/patchmark-<version>.zip
 ```
 
 PHP follows the WordPress Coding Standards; `phpcs.xml.dist` is included.
@@ -197,32 +197,37 @@ PHP follows the WordPress Coding Standards; `phpcs.xml.dist` is included.
 | `app/` | The viewer: React + TypeScript, with the diff and patch code in `app/lib` |
 | `build/` | Compiled viewer (generated, not committed) |
 | `tests/` | Engine checks |
-| `licenses/` | Font license (Atkinson Hyperlegible Mono, OFL) |
+| `licenses/` | Font licenses (Bricolage Grotesque, Atkinson Hyperlegible Next and Mono, OFL) |
 | `.wordpress-org/` | Icon, banners and screenshots for the plugin directory |
 
 The GitHub workflow typechecks, lints, runs PHPCS, builds, and attaches the plugin zip to every push.
 
 ## Brand
 
-<img src=".wordpress-org/icon-128x128.png" alt="Upload Diff icon" width="64" align="right">
+<img src=".wordpress-org/icon-128x128.png" alt="Patchmark icon" width="64" align="right">
 
-Upload Diff is a CC Software plugin and shares the CC Software mark with Routemark and Unified Blocklist. The name is two words. In the wordmark, "Upload" is in the text color and "Diff" is in blue.
+Patchmark is a CC Software plugin, a sibling of [Routemark](https://github.com/ClearanceClarence-Software/Routemark) and [Unified Blocklist](https://github.com/ClearanceClarence-Software/Unified-Blocklist), and uses the same look. The name is one word with a capital P. In the wordmark, "Patch" is in the text color and "mark" is in blue, as in Routemark.
 
-The mark is the CC Software hex well with three lines of a diff inside it: a removed line in red, an added line in green, and an unchanged one in light blue. The well is always graphite, so the mark works on light and dark backgrounds.
+The mark is the CC Software hex well with a diff inside it: a removed line in red, an added line in green that ends in Routemark's marker, and an unchanged line in light blue. The well is always graphite, so the same mark works on light and dark backgrounds.
 
 | | |
 | --- | --- |
 | Blue `#3B82F6` | Outer hex |
 | Graphite `#16181B` | Hex well, banner background |
+| Dark blue `#1E40AF` | "mark" on light backgrounds, marker center |
+| Light blue `#93C5FD` | Unchanged line, "mark" on dark backgrounds |
 | Red `#F87171` | Removed line |
 | Green `#4ADE80` | Added line |
-| Light blue `#93C5FD` | Unchanged line, "Diff" on dark backgrounds |
 
-The viewer lives inside a core WordPress screen, so it has no palette of its own: wp-admin's grays and the user's admin color scheme (`--wp-admin-theme-color`), with the usual green and red for additions and removals. Code is set in Atkinson Hyperlegible Mono, which keeps `l`, `I`, `1`, `O` and `0` apart; that matters when a change is one character. The wordmark on the banner is Bricolage Grotesque.
+The review sits inside a core WordPress screen, so, like Routemark's light theme, it has no palette of its own: wp-admin's grays and the user's admin color scheme (`--wp-admin-theme-color`), with the usual green and red for additions and removals. A brand bar with the mark, wordmark and version tops the review, as Routemark's top bar does.
+
+The wordmark is set in Bricolage Grotesque. Everything else uses Atkinson Hyperlegible Next, and code uses Atkinson Hyperlegible Mono, which keeps `l`, `I`, `1`, `O` and `0` apart; that matters when a change is one character. All three are bundled under the OFL.
+
+Patchmark was called Upload Diff during development. Same plugin, new name.
 
 ## Credits
 
-Atkinson Hyperlegible Mono, Copyright 2020-2024 The Atkinson Hyperlegible Next / Mono Project Authors, SIL Open Font License 1.1. Bundled in `build/fonts`, license in `licenses/`. Served from the plugin folder, never from Google.
+Bricolage Grotesque (Copyright 2022 The Bricolage Grotesque Project Authors) and Atkinson Hyperlegible Next and Mono (Copyright 2020-2024 The Atkinson Hyperlegible Next / Mono Project Authors), all under the SIL Open Font License 1.1. Bundled in `build/fonts`, licenses in `licenses/`. Served from the plugin folder, never from Google.
 
 The line diff is Eugene W. Myers' O(ND) algorithm ("An O(ND) Difference Algorithm and Its Variations", 1986).
 

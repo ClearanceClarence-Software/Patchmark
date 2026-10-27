@@ -13,7 +13,7 @@ export function bytes( n: number | null ): string {
 	if ( n < 1024 ) {
 		return sprintf(
 			/* translators: %s: number of bytes */
-			_n( '%s byte', '%s bytes', n, 'ccs-upload-diff' ),
+			_n( '%s byte', '%s bytes', n, 'patchmark' ),
 			num( n )
 		);
 	}
@@ -33,7 +33,7 @@ export function bytes( n: number | null ): string {
 export function sizeChange( from: number, to: number ): string {
 	const diff = to - from;
 	if ( diff === 0 ) {
-		return __( 'same size', 'ccs-upload-diff' );
+		return __( 'same size', 'patchmark' );
 	}
 	return ( diff > 0 ? '+' : '−' ) + bytes( Math.abs( diff ) );
 }

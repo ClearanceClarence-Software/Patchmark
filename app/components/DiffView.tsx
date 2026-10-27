@@ -91,29 +91,27 @@ export default function DiffView( {
 		: fold( rows, CONTEXT, expanded, reveal );
 
 	return (
-		<div className="ccs-ud-diff">
-			<div className="ccs-ud-diff-head">
+		<div className="pmk-diff">
+			<div className="pmk-diff-head">
 				<StatusBadge status={ file.status } />
-				<span className="ccs-ud-diff-path">
+				<span className="pmk-diff-path">
 					{ file.status === 'renamed' && file.oldPath && (
 						<>
-							<span className="ccs-ud-muted">
-								{ file.oldPath }
-							</span>
+							<span className="pmk-muted">{ file.oldPath }</span>
 							<Dashicon name="arrow-right-alt" />
 						</>
 					) }
 					{ file.path }
 				</span>
 				{ hasText && file.status !== 'renamed' && (
-					<span className="ccs-ud-diff-stats">
+					<span className="pmk-diff-stats">
 						<span className="is-added">+{ num( s.added ) }</span>
 						<span className="is-removed">
 							−{ num( s.removed ) }
 						</span>
 					</span>
 				) }
-				<span className="ccs-ud-muted ccs-ud-diff-size">
+				<span className="pmk-muted pmk-diff-size">
 					{ file.oldSize !== null && file.newSize !== null
 						? `${ bytes( file.oldSize ) } → ${ bytes(
 								file.newSize
@@ -127,10 +125,10 @@ export default function DiffView( {
 			) }
 
 			{ file.status === 'renamed' && (
-				<p className="ccs-ud-diff-note">
+				<p className="pmk-diff-note">
 					{ __(
 						'Moved without changes. The contents are identical.',
-						'ccs-upload-diff'
+						'patchmark'
 					) }
 				</p>
 			) }
@@ -139,59 +137,59 @@ export default function DiffView( {
 				! hasText &&
 				! file.oldImage &&
 				! file.newImage && (
-					<p className="ccs-ud-diff-note">
+					<p className="pmk-diff-note">
 						{ file.kind !== 'text' &&
 							__(
 								'Binary file. Only the size and checksum are compared.',
-								'ccs-upload-diff'
+								'patchmark'
 							) }
 						{ file.kind === 'text' &&
 							file.note === 'large' &&
 							__(
 								'This file is over 512 KB, so its contents are not shown. It was still compared and checked.',
-								'ccs-upload-diff'
+								'patchmark'
 							) }
 						{ file.kind === 'text' &&
 							file.note === 'budget' &&
 							__(
 								'Left out to keep the page light: the upload has more changed text than fits. It was still compared and checked.',
-								'ccs-upload-diff'
+								'patchmark'
 							) }
 					</p>
 				) }
 
 			{ hasText && file.status === 'whitespace' && ignoreWhitespace && (
-				<p className="ccs-ud-diff-note">
+				<p className="pmk-diff-note">
 					{ __(
 						'Only line endings or trailing spaces differ. Turn off “Ignore whitespace” to see them.',
-						'ccs-upload-diff'
+						'patchmark'
 					) }
 				</p>
 			) }
 
 			{ hasText && rows.length === 0 && file.status !== 'renamed' && (
-				<p className="ccs-ud-diff-note">
-					{ __( 'The file is empty.', 'ccs-upload-diff' ) }
+				<p className="pmk-diff-note">
+					{ __( 'The file is empty.', 'patchmark' ) }
 				</p>
 			) }
 
 			{ hasText && rows.length > 0 && (
 				<div
 					ref={ body }
-					className={ `ccs-ud-code is-${ whole ? 'unified' : mode }` }
+					className={ `pmk-code is-${ whole ? 'unified' : mode }` }
 				>
 					<table>
 						{ mode === 'split' && ! whole ? (
 							<colgroup>
-								<col className="ccs-ud-col-num" />
+								<col className="pmk-col-num" />
 								<col />
-								<col className="ccs-ud-col-num" />
+								<col className="pmk-col-num" />
 								<col />
 							</colgroup>
 						) : (
 							<colgroup>
-								<col className="ccs-ud-col-num" />
-								<col className="ccs-ud-col-num" />
+								<col className="pmk-col-num" />
+								<col className="pmk-col-num" />
 								<col />
 							</colgroup>
 						) }
@@ -200,7 +198,7 @@ export default function DiffView( {
 								block.kind === 'gap' ? (
 									<tr
 										key={ `gap-${ block.from }` }
-										className="ccs-ud-gap"
+										className="pmk-gap"
 									>
 										<td
 											colSpan={
@@ -226,7 +224,7 @@ export default function DiffView( {
 														'Show %s unchanged line',
 														'Show %s unchanged lines',
 														block.count,
-														'ccs-upload-diff'
+														'patchmark'
 													),
 													num( block.count )
 												) }
@@ -248,12 +246,12 @@ export default function DiffView( {
 					{ whole && ! showAll && rows.length > FIRST_LINES && (
 						<button
 							type="button"
-							className="button ccs-ud-more"
+							className="button pmk-more"
 							onClick={ () => setShowAll( true ) }
 						>
 							{ sprintf(
 								/* translators: %s: number of lines */
-								__( 'Show all %s lines', 'ccs-upload-diff' ),
+								__( 'Show all %s lines', 'patchmark' ),
 								num( rows.length )
 							) }
 						</button>
@@ -277,10 +275,10 @@ function SplitRows( { rows }: { rows: Row[] } ) {
 					data-old={ r.oldNo }
 					data-new={ r.newNo }
 				>
-					<td className="ccs-ud-num">{ r.oldNo }</td>
-					<td className="ccs-ud-line">{ r.text }</td>
-					<td className="ccs-ud-num">{ r.newNo }</td>
-					<td className="ccs-ud-line">{ r.text }</td>
+					<td className="pmk-num">{ r.oldNo }</td>
+					<td className="pmk-line">{ r.text }</td>
+					<td className="pmk-num">{ r.newNo }</td>
+					<td className="pmk-line">{ r.text }</td>
 				</tr>
 			);
 			i++;
@@ -302,13 +300,11 @@ function SplitRows( { rows }: { rows: Row[] } ) {
 					data-old={ d?.oldNo || undefined }
 					data-new={ a?.newNo || undefined }
 				>
-					<td
-						className={ `ccs-ud-num${ d ? ' is-del' : ' is-blank' }` }
-					>
+					<td className={ `pmk-num${ d ? ' is-del' : ' is-blank' }` }>
 						{ d?.oldNo ?? '' }
 					</td>
 					<td
-						className={ `ccs-ud-line${ d ? ' is-del' : ' is-blank' }` }
+						className={ `pmk-line${ d ? ' is-del' : ' is-blank' }` }
 					>
 						{ d &&
 							( words ? (
@@ -317,13 +313,11 @@ function SplitRows( { rows }: { rows: Row[] } ) {
 								d.text
 							) ) }
 					</td>
-					<td
-						className={ `ccs-ud-num${ a ? ' is-add' : ' is-blank' }` }
-					>
+					<td className={ `pmk-num${ a ? ' is-add' : ' is-blank' }` }>
 						{ a?.newNo ?? '' }
 					</td>
 					<td
-						className={ `ccs-ud-line${ a ? ' is-add' : ' is-blank' }` }
+						className={ `pmk-line${ a ? ' is-add' : ' is-blank' }` }
 					>
 						{ a &&
 							( words ? (
@@ -383,14 +377,14 @@ function UnifiedRows( { rows }: { rows: Row[] } ) {
 						data-old={ r.oldNo || undefined }
 						data-new={ r.newNo || undefined }
 					>
-						<td className={ `ccs-ud-num${ cls }` }>
+						<td className={ `pmk-num${ cls }` }>
 							{ r.oldNo || '' }
 						</td>
-						<td className={ `ccs-ud-num${ cls }` }>
+						<td className={ `pmk-num${ cls }` }>
 							{ r.newNo || '' }
 						</td>
-						<td className={ `ccs-ud-line${ cls }` }>
-							<span className="ccs-ud-sign" aria-hidden="true">
+						<td className={ `pmk-line${ cls }` }>
+							<span className="pmk-sign" aria-hidden="true">
 								{ r.type === 'add'
 									? '+'
 									: r.type === 'del'
@@ -422,22 +416,22 @@ function Pieces( { pieces }: { pieces: Piece[] } ) {
 
 function ImagePair( { file }: { file: FileEntry } ) {
 	return (
-		<div className="ccs-ud-images">
+		<div className="pmk-images">
 			{ [
-				[ __( 'Installed', 'ccs-upload-diff' ), file.oldImage ],
-				[ __( 'Uploaded', 'ccs-upload-diff' ), file.newImage ],
+				[ __( 'Installed', 'patchmark' ), file.oldImage ],
+				[ __( 'Uploaded', 'patchmark' ), file.newImage ],
 			].map( ( [ label, src ] ) => (
 				<figure key={ label }>
 					<figcaption>{ label }</figcaption>
-					<div className="ccs-ud-image-well">
+					<div className="pmk-image-well">
 						{ src ? (
 							<img
 								src={ src }
 								alt={ `${ label }: ${ file.path }` }
 							/>
 						) : (
-							<span className="ccs-ud-muted">
-								{ __( 'None', 'ccs-upload-diff' ) }
+							<span className="pmk-muted">
+								{ __( 'None', 'patchmark' ) }
 							</span>
 						) }
 					</div>

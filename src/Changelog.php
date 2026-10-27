@@ -2,10 +2,10 @@
 /**
  * Changelog entries between the installed and the uploaded version.
  *
- * @package UploadDiff
+ * @package Patchmark
  */
 
-namespace ClearanceClarence\UploadDiff;
+namespace ClearanceClarence\Patchmark;
 
 defined( 'ABSPATH' ) || exit;
 

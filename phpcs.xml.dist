@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<ruleset name="Upload Diff">
+<ruleset name="Patchmark">
 	<description>WordPress Coding Standards, including the escaping, sanitizing and nonce checks.</description>
 
-	<file>ccs-upload-diff.php</file>
+	<file>patchmark.php</file>
 	<file>src</file>
 
 	<arg name="extensions" value="php"/>
@@ -19,7 +19,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="ccs-upload-diff"/>
+				<element value="patchmark"/>
 			</property>
 		</properties>
 	</rule>

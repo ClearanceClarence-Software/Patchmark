@@ -30,7 +30,7 @@ function readPref< T extends string >(
 	allowed: T[]
 ): T {
 	try {
-		const v = window.localStorage.getItem( `ccs-ud-${ key }` ) as T | null;
+		const v = window.localStorage.getItem( `pmk-${ key }` ) as T | null;
 		return v && allowed.includes( v ) ? v : fallback;
 	} catch {
 		return fallback;
@@ -39,7 +39,7 @@ function readPref< T extends string >(
 
 function writePref( key: string, value: string ) {
 	try {
-		window.localStorage.setItem( `ccs-ud-${ key }`, value );
+		window.localStorage.setItem( `pmk-${ key }`, value );
 	} catch {
 		// Private windows: the choice just isn't remembered.
 	}
@@ -222,15 +222,12 @@ export default function Files( {
 				icon="yes-alt"
 				title={ __(
 					'The upload is identical to the installed copy.',
-					'ccs-upload-diff'
+					'patchmark'
 				) }
 			>
 				{ sprintf(
 					/* translators: %s: number of files */
-					__(
-						'All %s files have the same contents.',
-						'ccs-upload-diff'
-					),
+					__( 'All %s files have the same contents.', 'patchmark' ),
 					num( report.counts.unchanged )
 				) }
 			</Empty>
@@ -238,41 +235,41 @@ export default function Files( {
 	}
 
 	return (
-		<div className="ccs-ud-files">
-			<div className="ccs-ud-toolbar">
-				<label className="ccs-ud-search" htmlFor="ccs-ud-filter">
+		<div className="pmk-files">
+			<div className="pmk-toolbar">
+				<label className="pmk-search" htmlFor="pmk-filter">
 					<Dashicon name="search" />
 					<span className="screen-reader-text">
-						{ __( 'Filter files', 'ccs-upload-diff' ) }
+						{ __( 'Filter files', 'patchmark' ) }
 					</span>
 					<input
-						id="ccs-ud-filter"
+						id="pmk-filter"
 						type="search"
 						value={ query }
-						placeholder={ __( 'Filter files', 'ccs-upload-diff' ) }
+						placeholder={ __( 'Filter files', 'patchmark' ) }
 						onChange={ ( e ) => setQuery( e.target.value ) }
 					/>
 				</label>
-				<label className="ccs-ud-check" htmlFor="ccs-ud-contents">
+				<label className="pmk-check" htmlFor="pmk-contents">
 					<input
-						id="ccs-ud-contents"
+						id="pmk-contents"
 						type="checkbox"
 						checked={ inContents }
 						onChange={ ( e ) => setInContents( e.target.checked ) }
 					/>
-					{ __( 'Search contents', 'ccs-upload-diff' ) }
+					{ __( 'Search contents', 'patchmark' ) }
 				</label>
 				<div
-					className="ccs-ud-chips"
+					className="pmk-chips"
 					role="group"
-					aria-label={ __( 'Show', 'ccs-upload-diff' ) }
+					aria-label={ __( 'Show', 'patchmark' ) }
 				>
 					{ ORDER.filter( ( s ) => counts[ s ] ).map( ( s ) => (
 						<button
 							key={ s }
 							type="button"
 							aria-pressed={ statuses.has( s ) }
-							className={ `ccs-ud-chip is-${ s }` }
+							className={ `pmk-chip is-${ s }` }
 							onClick={ () => toggleStatus( s ) }
 						>
 							{ STATUS_LABELS[ s ] }
@@ -280,10 +277,10 @@ export default function Files( {
 						</button>
 					) ) }
 				</div>
-				<span className="ccs-ud-spacer" />
-				<label className="ccs-ud-check" htmlFor="ccs-ud-ws">
+				<span className="pmk-spacer" />
+				<label className="pmk-check" htmlFor="pmk-ws">
 					<input
-						id="ccs-ud-ws"
+						id="pmk-ws"
 						type="checkbox"
 						checked={ ignoreWs }
 						onChange={ ( e ) => {
@@ -291,17 +288,17 @@ export default function Files( {
 							writePref( 'ws', e.target.checked ? 'on' : 'off' );
 						} }
 					/>
-					{ __( 'Ignore whitespace', 'ccs-upload-diff' ) }
+					{ __( 'Ignore whitespace', 'patchmark' ) }
 				</label>
 				<div
-					className="ccs-ud-seg"
+					className="pmk-seg"
 					role="group"
-					aria-label={ __( 'Layout', 'ccs-upload-diff' ) }
+					aria-label={ __( 'Layout', 'patchmark' ) }
 				>
 					{ (
 						[
-							[ 'split', __( 'Split', 'ccs-upload-diff' ) ],
-							[ 'unified', __( 'Unified', 'ccs-upload-diff' ) ],
+							[ 'split', __( 'Split', 'patchmark' ) ],
+							[ 'unified', __( 'Unified', 'patchmark' ) ],
 						] as Array< [ ViewMode, string ] >
 					 ).map( ( [ m, label ] ) => (
 						<button
@@ -323,20 +320,20 @@ export default function Files( {
 					onClick={ downloadPatch }
 				>
 					<Dashicon name="download" />
-					{ __( 'Download .patch', 'ccs-upload-diff' ) }
+					{ __( 'Download .patch', 'patchmark' ) }
 				</button>
 			</div>
 
-			<div className="ccs-ud-browser">
+			<div className="pmk-browser">
 				<div
-					className="ccs-ud-tree"
+					className="pmk-tree"
 					ref={ treeRef }
-					aria-label={ __( 'Changed files', 'ccs-upload-diff' ) }
+					aria-label={ __( 'Changed files', 'patchmark' ) }
 					role="navigation"
 				>
 					{ visible.length === 0 ? (
-						<p className="ccs-ud-muted ccs-ud-tree-empty">
-							{ __( 'No files match.', 'ccs-upload-diff' ) }
+						<p className="pmk-muted pmk-tree-empty">
+							{ __( 'No files match.', 'patchmark' ) }
 						</p>
 					) : (
 						<TreeLevel
@@ -359,21 +356,21 @@ export default function Files( {
 							stats={ fileStats }
 						/>
 					) }
-					<p className="ccs-ud-tree-foot ccs-ud-muted">
+					<p className="pmk-tree-foot pmk-muted">
 						{ sprintf(
 							/* translators: %s: number of files */
 							_n(
 								'%s file',
 								'%s files',
 								visible.length,
-								'ccs-upload-diff'
+								'patchmark'
 							),
 							num( visible.length )
 						) }{ ' ' }
 						· <kbd>j</kbd>/<kbd>k</kbd>
 					</p>
 				</div>
-				<div className="ccs-ud-view">
+				<div className="pmk-view">
 					{ current ? (
 						<DiffView
 							file={ current }
@@ -391,7 +388,7 @@ export default function Files( {
 							icon="media-code"
 							title={ __(
 								'Pick a file to see its changes.',
-								'ccs-upload-diff'
+								'patchmark'
 							) }
 						/>
 					) }
@@ -466,14 +463,14 @@ function TreeLevel( {
 	stats: Map< string, DiffStats >;
 } ) {
 	return (
-		<ul className="ccs-ud-tree-level">
+		<ul className="pmk-tree-level">
 			{ folder.folders.map( ( f ) => {
 				const open = ! collapsed.has( f.path );
 				return (
 					<li key={ f.path }>
 						<button
 							type="button"
-							className="ccs-ud-tree-folder"
+							className="pmk-tree-folder"
 							style={ { paddingLeft: 8 + depth * 14 } }
 							aria-expanded={ open }
 							onClick={ () => onToggle( f.path ) }
@@ -485,8 +482,8 @@ function TreeLevel( {
 										: 'arrow-right-alt2'
 								}
 							/>
-							<span className="ccs-ud-tree-name">{ f.name }</span>
-							<span className="ccs-ud-muted">
+							<span className="pmk-tree-name">{ f.name }</span>
+							<span className="pmk-muted">
 								{ countFiles( f ) }
 							</span>
 						</button>
@@ -511,7 +508,7 @@ function TreeLevel( {
 						<button
 							type="button"
 							data-path={ f.path }
-							className={ `ccs-ud-tree-file${ f.path === selected ? ' is-selected' : '' }` }
+							className={ `pmk-tree-file${ f.path === selected ? ' is-selected' : '' }` }
 							style={ { paddingLeft: 8 + depth * 14 + 18 } }
 							aria-current={
 								f.path === selected ? 'true' : undefined
@@ -524,11 +521,11 @@ function TreeLevel( {
 							}
 						>
 							<StatusBadge status={ f.status } short />
-							<span className="ccs-ud-tree-name">
+							<span className="pmk-tree-name">
 								{ f.path.split( '/' ).pop() }
 							</span>
 							{ s && ( s.added > 0 || s.removed > 0 ) && (
-								<span className="ccs-ud-tree-stats">
+								<span className="pmk-tree-stats">
 									{ s.added > 0 && (
 										<span className="is-added">
 											+{ s.added }

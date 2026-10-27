@@ -6,7 +6,7 @@
 import { createWriteStream, existsSync, mkdirSync, readFileSync } from 'node:fs';
 import archiver from 'archiver';
 
-const SLUG = 'ccs-upload-diff';
+const SLUG = 'patchmark';
 const FILES = [ `${ SLUG }.php`, 'readme.txt' ];
 const DIRS = [ 'src', 'build', 'licenses' ];
 

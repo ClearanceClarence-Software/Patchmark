@@ -3,18 +3,18 @@
  * Engine checks. Builds an installed and an uploaded copy of a small plugin in a temporary
  * folder (the uploaded one with planted problems), runs the review and checks what it finds.
  *
- * Run inside any WordPress with Upload Diff active:
+ * Run inside any WordPress with Patchmark active:
  *     wp eval-file tests/check.php
  *
  * The suspicious code is written at test time, so it never sits in the repository as PHP.
  *
- * @package UploadDiff
+ * @package Patchmark
  */
 
 // phpcs:ignoreFile -- Test script.
 
-use ClearanceClarence\UploadDiff\CodeScan;
-use ClearanceClarence\UploadDiff\Plugin;
+use ClearanceClarence\Patchmark\CodeScan;
+use ClearanceClarence\Patchmark\Plugin;
 
 $pass = 0;
 $fail = 0;
@@ -23,7 +23,7 @@ $t    = static function ( $name, $ok, $extra = '' ) use ( &$pass, &$fail ) {
 	echo ( $ok ? 'PASS  ' : 'FAIL  ' ) . $name . ( $ok || '' === $extra ? '' : "\n      " . print_r( $extra, true ) ) . "\n";
 };
 
-$root = trailingslashit( get_temp_dir() ) . 'ccs-upload-diff-check-' . wp_generate_password( 6, false );
+$root = trailingslashit( get_temp_dir() ) . 'patchmark-check-' . wp_generate_password( 6, false );
 $put  = static function ( $base, $files ) {
 	foreach ( $files as $rel => $body ) {
 		wp_mkdir_p( dirname( "$base/$rel" ) );

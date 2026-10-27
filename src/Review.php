@@ -2,10 +2,10 @@
 /**
  * Things worth a look before replacing the installed plugin.
  *
- * @package UploadDiff
+ * @package Patchmark
  */
 
-namespace ClearanceClarence\UploadDiff;
+namespace ClearanceClarence\Patchmark;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -230,8 +230,8 @@ final class Review {
 				'warn',
 				'downgrade',
 				/* translators: 1: uploaded version, 2: installed version. */
-				sprintf( __( 'This is an older version (%1$s) than the one installed (%2$s)', 'ccs-upload-diff' ), $new_v, $old_v ),
-				__( 'Database changes made by the newer version are not undone. Check the changelog below for what you give up.', 'ccs-upload-diff' )
+				sprintf( __( 'This is an older version (%1$s) than the one installed (%2$s)', 'patchmark' ), $new_v, $old_v ),
+				__( 'Database changes made by the newer version are not undone. Check the changelog below for what you give up.', 'patchmark' )
 			);
 		}
 
@@ -241,8 +241,8 @@ final class Review {
 				'warn',
 				'same-version',
 				/* translators: %s: version. */
-				sprintf( __( 'Both are version %s, but the files differ', 'ccs-upload-diff' ), $new_v ),
-				__( 'Two different builds with one version number make it hard to tell later which one a site runs. Consider bumping the version.', 'ccs-upload-diff' )
+				sprintf( __( 'Both are version %s, but the files differ', 'patchmark' ), $new_v ),
+				__( 'Two different builds with one version number make it hard to tell later which one a site runs. Consider bumping the version.', 'patchmark' )
 			);
 		}
 
@@ -252,9 +252,9 @@ final class Review {
 			$this->add(
 				'danger',
 				'name',
-				__( 'The plugin name is different', 'ccs-upload-diff' ),
+				__( 'The plugin name is different', 'patchmark' ),
 				/* translators: 1: installed name, 2: uploaded name. */
-				sprintf( __( '"%1$s" would be replaced by "%2$s". The zip may be a different plugin that happens to use the same folder name.', 'ccs-upload-diff' ), $old_name, $new_name )
+				sprintf( __( '"%1$s" would be replaced by "%2$s". The zip may be a different plugin that happens to use the same folder name.', 'patchmark' ), $old_name, $new_name )
 			);
 		}
 
@@ -264,9 +264,9 @@ final class Review {
 			$this->add(
 				'warn',
 				'author',
-				__( 'The author is different', 'ccs-upload-diff' ),
+				__( 'The author is different', 'patchmark' ),
 				/* translators: 1: installed author, 2: uploaded author. */
-				sprintf( __( 'Installed: %1$s. Uploaded: %2$s. Plugins do change hands, but make sure this zip came from someone you trust.', 'ccs-upload-diff' ), $old_author, '' !== $new_author ? $new_author : '—' )
+				sprintf( __( 'Installed: %1$s. Uploaded: %2$s. Plugins do change hands, but make sure this zip came from someone you trust.', 'patchmark' ), $old_author, '' !== $new_author ? $new_author : '—' )
 			);
 		}
 
@@ -276,39 +276,39 @@ final class Review {
 			$this->add(
 				'danger',
 				'update-uri',
-				__( 'Future updates would come from somewhere else', 'ccs-upload-diff' ),
+				__( 'Future updates would come from somewhere else', 'patchmark' ),
 				/* translators: %s: Update URI. */
-				sprintf( __( 'The upload sets Update URI to %s. WordPress then stops offering updates from WordPress.org, and whoever controls that address decides what the next update contains.', 'ccs-upload-diff' ), $new_update )
+				sprintf( __( 'The upload sets Update URI to %s. WordPress then stops offering updates from WordPress.org, and whoever controls that address decides what the next update contains.', 'patchmark' ), $new_update )
 			);
 		} elseif ( '' !== $old_update && '' === $new_update ) {
-			$this->add( 'info', 'update-uri-removed', __( 'The Update URI header was removed', 'ccs-upload-diff' ), __( 'Updates will be looked up on WordPress.org by the plugin folder name.', 'ccs-upload-diff' ) );
+			$this->add( 'info', 'update-uri-removed', __( 'The Update URI header was removed', 'patchmark' ), __( 'Updates will be looked up on WordPress.org by the plugin folder name.', 'patchmark' ) );
 		}
 
 		foreach ( array(
-			'PluginURI' => __( 'Plugin URI', 'ccs-upload-diff' ),
-			'AuthorURI' => __( 'Author URI', 'ccs-upload-diff' ),
+			'PluginURI' => __( 'Plugin URI', 'patchmark' ),
+			'AuthorURI' => __( 'Author URI', 'patchmark' ),
 		) as $key => $label ) {
 			$a = (string) wp_parse_url( $get( $cur, $key ), PHP_URL_HOST );
 			$b = (string) wp_parse_url( $get( $up, $key ), PHP_URL_HOST );
 			if ( '' !== $a && '' !== $b && strtolower( $a ) !== strtolower( $b ) ) {
 				/* translators: 1: header name, 2: old host, 3: new host. */
-				$this->add( 'info', 'uri-' . strtolower( $key ), sprintf( __( '%1$s moved from %2$s to %3$s', 'ccs-upload-diff' ), $label, $a, $b ), '' );
+				$this->add( 'info', 'uri-' . strtolower( $key ), sprintf( __( '%1$s moved from %2$s to %3$s', 'patchmark' ), $label, $a, $b ), '' );
 			}
 		}
 
 		$requires_php = $get( $up, 'RequiresPHP' );
 		if ( '' !== $requires_php && ! is_php_version_compatible( $requires_php ) ) {
 			/* translators: 1: required PHP version, 2: server PHP version. */
-			$this->add( 'danger', 'php', sprintf( __( 'Needs PHP %1$s, this server runs %2$s', 'ccs-upload-diff' ), $requires_php, PHP_VERSION ), __( 'WordPress will refuse to install it.', 'ccs-upload-diff' ) );
+			$this->add( 'danger', 'php', sprintf( __( 'Needs PHP %1$s, this server runs %2$s', 'patchmark' ), $requires_php, PHP_VERSION ), __( 'WordPress will refuse to install it.', 'patchmark' ) );
 		}
 		$requires_wp = $get( $up, 'RequiresWP' );
 		if ( '' !== $requires_wp && ! is_wp_version_compatible( $requires_wp ) ) {
 			/* translators: 1: required WordPress version, 2: installed WordPress version. */
-			$this->add( 'danger', 'wp', sprintf( __( 'Needs WordPress %1$s, this site runs %2$s', 'ccs-upload-diff' ), $requires_wp, wp_get_wp_version() ), __( 'WordPress will refuse to install it.', 'ccs-upload-diff' ) );
+			$this->add( 'danger', 'wp', sprintf( __( 'Needs WordPress %1$s, this site runs %2$s', 'patchmark' ), $requires_wp, wp_get_wp_version() ), __( 'WordPress will refuse to install it.', 'patchmark' ) );
 		}
 		if ( '' !== $requires_php && '' !== $get( $cur, 'RequiresPHP' ) && version_compare( $requires_php, $get( $cur, 'RequiresPHP' ), '>' ) && is_php_version_compatible( $requires_php ) ) {
 			/* translators: 1: old minimum, 2: new minimum. */
-			$this->add( 'info', 'php-raised', sprintf( __( 'Minimum PHP goes from %1$s to %2$s', 'ccs-upload-diff' ), $get( $cur, 'RequiresPHP' ), $requires_php ), __( 'This server meets it.', 'ccs-upload-diff' ) );
+			$this->add( 'info', 'php-raised', sprintf( __( 'Minimum PHP goes from %1$s to %2$s', 'patchmark' ), $get( $cur, 'RequiresPHP' ), $requires_php ), __( 'This server meets it.', 'patchmark' ) );
 		}
 
 		$deps = array_filter( array_map( 'trim', explode( ',', $get( $up, 'RequiresPlugins' ) ) ) );
@@ -330,7 +330,7 @@ final class Review {
 			}
 			if ( $missing ) {
 				/* translators: %s: comma-separated plugin slugs. */
-				$this->add( 'warn', 'dependencies', __( 'Needs plugins that are not active', 'ccs-upload-diff' ), sprintf( __( 'Requires Plugins lists %s. WordPress will not activate it until they are installed and active.', 'ccs-upload-diff' ), implode( ', ', $missing ) ) );
+				$this->add( 'warn', 'dependencies', __( 'Needs plugins that are not active', 'patchmark' ), sprintf( __( 'Requires Plugins lists %s. WordPress will not activate it until they are installed and active.', 'patchmark' ), implode( ', ', $missing ) ) );
 			}
 		}
 
@@ -346,24 +346,24 @@ final class Review {
 				$active ? 'danger' : 'info',
 				'main-file',
 				/* translators: 1: old main file, 2: new main file. */
-				sprintf( __( 'The main file is renamed from %1$s to %2$s', 'ccs-upload-diff' ), $old_main, $new_main ),
-				$active ? __( 'WordPress tracks active plugins by this file name, so the plugin will be deactivated after the replacement. Activate it again afterwards.', 'ccs-upload-diff' ) : ''
+				sprintf( __( 'The main file is renamed from %1$s to %2$s', 'patchmark' ), $old_main, $new_main ),
+				$active ? __( 'WordPress tracks active plugins by this file name, so the plugin will be deactivated after the replacement. Activate it again afterwards.', 'patchmark' ) : ''
 			);
 		}
 
 		if ( $get( $cur, 'TextDomain' ) !== $get( $up, 'TextDomain' ) && '' !== $get( $cur, 'TextDomain' ) ) {
 			/* translators: 1: old text domain, 2: new text domain. */
-			$this->add( 'info', 'text-domain', sprintf( __( 'Text domain changes from %1$s to %2$s', 'ccs-upload-diff' ), $get( $cur, 'TextDomain' ), '' !== $get( $up, 'TextDomain' ) ? $get( $up, 'TextDomain' ) : '—' ), __( 'Existing translations may stop loading.', 'ccs-upload-diff' ) );
+			$this->add( 'info', 'text-domain', sprintf( __( 'Text domain changes from %1$s to %2$s', 'patchmark' ), $get( $cur, 'TextDomain' ), '' !== $get( $up, 'TextDomain' ) ? $get( $up, 'TextDomain' ) : '—' ), __( 'Existing translations may stop loading.', 'patchmark' ) );
 		}
 
 		if ( empty( $cur['Network'] ) && ! empty( $up['Network'] ) ) {
-			$this->add( 'warn', 'network', __( 'It becomes a network-only plugin', 'ccs-upload-diff' ), __( 'On multisite it can then only be activated network-wide.', 'ccs-upload-diff' ) );
+			$this->add( 'warn', 'network', __( 'It becomes a network-only plugin', 'patchmark' ), __( 'On multisite it can then only be activated network-wide.', 'patchmark' ) );
 		}
 
 		$stable = Changelog::stable_tag( $this->cmp->new );
 		if ( '' !== $stable && 'trunk' !== strtolower( $stable ) && '' !== $new_v && $stable !== $new_v ) {
 			/* translators: 1: stable tag, 2: version. */
-			$this->add( 'info', 'stable-tag', sprintf( __( 'readme.txt says Stable tag %1$s, the plugin says Version %2$s', 'ccs-upload-diff' ), $stable, $new_v ), '' );
+			$this->add( 'info', 'stable-tag', sprintf( __( 'readme.txt says Stable tag %1$s, the plugin says Version %2$s', 'patchmark' ), $stable, $new_v ), '' );
 		}
 	}
 
@@ -403,28 +403,28 @@ final class Review {
 		}
 
 		if ( $config ) {
-			$this->add( 'danger', 'server-config', __( 'Adds or changes server configuration files', 'ccs-upload-diff' ), __( 'Files such as .htaccess and .user.ini change how the web server or PHP behaves for the whole folder. Plugins rarely need them; read them before replacing.', 'ccs-upload-diff' ), $config );
+			$this->add( 'danger', 'server-config', __( 'Adds or changes server configuration files', 'patchmark' ), __( 'Files such as .htaccess and .user.ini change how the web server or PHP behaves for the whole folder. Plugins rarely need them; read them before replacing.', 'patchmark' ), $config );
 		}
 		if ( $odd_php ) {
-			$this->add( 'danger', 'odd-php', __( 'PHP files with unusual extensions', 'ccs-upload-diff' ), __( 'Extensions like .phtml or .phar, and names like image.jpg.php, are a classic way to slip code past a quick look.', 'ccs-upload-diff' ), $odd_php );
+			$this->add( 'danger', 'odd-php', __( 'PHP files with unusual extensions', 'patchmark' ), __( 'Extensions like .phtml or .phar, and names like image.jpg.php, are a classic way to slip code past a quick look.', 'patchmark' ), $odd_php );
 		}
 		if ( $hidden_php ) {
-			$this->add( 'warn', 'php-in-assets', __( 'PHP files in asset folders', 'ccs-upload-diff' ), __( 'PHP code in folders meant for images, fonts or styles is unusual. Check that these files belong there.', 'ccs-upload-diff' ), $hidden_php );
+			$this->add( 'warn', 'php-in-assets', __( 'PHP files in asset folders', 'patchmark' ), __( 'PHP code in folders meant for images, fonts or styles is unusual. Check that these files belong there.', 'patchmark' ), $hidden_php );
 		}
 		if ( $exec ) {
-			$this->add( 'warn', 'executables', __( 'Contains executables or scripts', 'ccs-upload-diff' ), __( 'A WordPress plugin does not normally ship programs or shell scripts.', 'ccs-upload-diff' ), $exec );
+			$this->add( 'warn', 'executables', __( 'Contains executables or scripts', 'patchmark' ), __( 'A WordPress plugin does not normally ship programs or shell scripts.', 'patchmark' ), $exec );
 		}
 		if ( $archives ) {
-			$this->add( 'info', 'archives', __( 'Bundles archives', 'ccs-upload-diff' ), __( 'The contents of archives inside the zip are not compared.', 'ccs-upload-diff' ), $archives );
+			$this->add( 'info', 'archives', __( 'Bundles archives', 'patchmark' ), __( 'The contents of archives inside the zip are not compared.', 'patchmark' ), $archives );
 		}
 		if ( $dotfiles ) {
-			$this->add( 'info', 'dotfiles', __( 'Adds hidden files', 'ccs-upload-diff' ), __( 'Files starting with a dot are hidden in most file browsers.', 'ccs-upload-diff' ), $dotfiles );
+			$this->add( 'info', 'dotfiles', __( 'Adds hidden files', 'patchmark' ), __( 'Files starting with a dot are hidden in most file browsers.', 'patchmark' ), $dotfiles );
 		}
 
 		$counts = $this->cmp->counts();
 		$total  = $counts['added'] + $counts['removed'] + $counts['renamed'] + $counts['modified'] + $counts['unchanged'];
 		if ( $total > 20 && $counts['unchanged'] < $total * 0.1 && $counts['removed'] > $total * 0.3 ) {
-			$this->add( 'warn', 'rewrite', __( 'Almost nothing is shared with the installed copy', 'ccs-upload-diff' ), __( 'Most files were removed or replaced. This may be a complete rewrite, or a different plugin.', 'ccs-upload-diff' ) );
+			$this->add( 'warn', 'rewrite', __( 'Almost nothing is shared with the installed copy', 'patchmark' ), __( 'Most files were removed or replaced. This may be a complete rewrite, or a different plugin.', 'patchmark' ) );
 		}
 	}
 
@@ -433,16 +433,16 @@ final class Review {
 	 */
 	private function code() {
 		$signals = array(
-			'eval'              => array( 'danger', __( 'Runs code built from strings', 'ccs-upload-diff' ), __( 'eval() and similar calls run text as code. Combined with decoding (base64 and friends) it is the most common shape of injected malware.', 'ccs-upload-diff' ) ),
-			'include_input'     => array( 'danger', __( 'Includes files named by the request', 'ccs-upload-diff' ), __( 'include or require with a value taken from $_GET, $_POST, $_REQUEST or $_COOKIE lets a visitor choose which file runs.', 'ccs-upload-diff' ) ),
-			'unserialize_input' => array( 'danger', __( 'Unserializes data from the request', 'ccs-upload-diff' ), __( 'unserialize() on visitor input can create objects the attacker chooses. Plugins should use JSON instead.', 'ccs-upload-diff' ) ),
-			'shell'             => array( 'danger', __( 'Runs shell commands', 'ccs-upload-diff' ), __( 'exec(), shell_exec(), system(), backticks and similar run programs on the server.', 'ccs-upload-diff' ) ),
-			'blob'              => array( 'danger', __( 'Long encoded strings', 'ccs-upload-diff' ), __( 'Strings of thousands of base64 characters usually hide code or data. Fonts and images inlined as data URIs are the harmless exception.', 'ccs-upload-diff' ) ),
-			'dynamic'           => array( 'warn', __( 'Creates functions at runtime', 'ccs-upload-diff' ), __( 'create_function() and assert() can run strings as code.', 'ccs-upload-diff' ) ),
-			'users'             => array( 'warn', __( 'Creates users, roles or logins', 'ccs-upload-diff' ), __( 'New code that creates accounts, adds roles or sets login cookies. Expected in membership plugins, a red flag anywhere else.', 'ccs-upload-diff' ) ),
-			'decode'            => array( 'warn', __( 'Decodes obfuscated data', 'ccs-upload-diff' ), __( 'base64_decode(), gzinflate(), str_rot13() and similar. Common and often harmless, but worth knowing what is being decoded.', 'ccs-upload-diff' ) ),
-			'remote'            => array( 'info', __( 'New outgoing requests', 'ccs-upload-diff' ), __( 'Code that contacts other servers. Check where it connects and what it sends.', 'ccs-upload-diff' ) ),
-			'writes'            => array( 'info', __( 'Writes files', 'ccs-upload-diff' ), __( 'New code that writes files to disk.', 'ccs-upload-diff' ) ),
+			'eval'              => array( 'danger', __( 'Runs code built from strings', 'patchmark' ), __( 'eval() and similar calls run text as code. Combined with decoding (base64 and friends) it is the most common shape of injected malware.', 'patchmark' ) ),
+			'include_input'     => array( 'danger', __( 'Includes files named by the request', 'patchmark' ), __( 'include or require with a value taken from $_GET, $_POST, $_REQUEST or $_COOKIE lets a visitor choose which file runs.', 'patchmark' ) ),
+			'unserialize_input' => array( 'danger', __( 'Unserializes data from the request', 'patchmark' ), __( 'unserialize() on visitor input can create objects the attacker chooses. Plugins should use JSON instead.', 'patchmark' ) ),
+			'shell'             => array( 'danger', __( 'Runs shell commands', 'patchmark' ), __( 'exec(), shell_exec(), system(), backticks and similar run programs on the server.', 'patchmark' ) ),
+			'blob'              => array( 'danger', __( 'Long encoded strings', 'patchmark' ), __( 'Strings of thousands of base64 characters usually hide code or data. Fonts and images inlined as data URIs are the harmless exception.', 'patchmark' ) ),
+			'dynamic'           => array( 'warn', __( 'Creates functions at runtime', 'patchmark' ), __( 'create_function() and assert() can run strings as code.', 'patchmark' ) ),
+			'users'             => array( 'warn', __( 'Creates users, roles or logins', 'patchmark' ), __( 'New code that creates accounts, adds roles or sets login cookies. Expected in membership plugins, a red flag anywhere else.', 'patchmark' ) ),
+			'decode'            => array( 'warn', __( 'Decodes obfuscated data', 'patchmark' ), __( 'base64_decode(), gzinflate(), str_rot13() and similar. Common and often harmless, but worth knowing what is being decoded.', 'patchmark' ) ),
+			'remote'            => array( 'info', __( 'New outgoing requests', 'patchmark' ), __( 'Code that contacts other servers. Check where it connects and what it sends.', 'patchmark' ) ),
+			'writes'            => array( 'info', __( 'Writes files', 'patchmark' ), __( 'New code that writes files to disk.', 'patchmark' ) ),
 		);
 
 		$found = array();
@@ -477,7 +477,7 @@ final class Review {
 
 		// eval() next to decoding is worse than either alone.
 		if ( isset( $found['eval'], $found['decode'] ) ) {
-			$signals['eval'][1] = __( 'Decodes text and runs it as code', 'ccs-upload-diff' );
+			$signals['eval'][1] = __( 'Decodes text and runs it as code', 'patchmark' );
 		}
 
 		foreach ( $signals as $signal => $meta ) {
@@ -501,7 +501,7 @@ final class Review {
 				'hosts',
 				sprintf(
 					/* translators: %d: number of web addresses. */
-					_n( '%d new web address in the code', '%d new web addresses in the code', count( $hosts ), 'ccs-upload-diff' ),
+					_n( '%d new web address in the code', '%d new web addresses in the code', count( $hosts ), 'patchmark' ),
 					count( $hosts )
 				),
 				implode( ', ', array_slice( array_keys( $hosts ), 0, 12 ) ) . ( count( $hosts ) > 12 ? ' …' : '' ),
@@ -510,7 +510,7 @@ final class Review {
 		}
 
 		if ( $this->partial ) {
-			$this->add( 'info', 'partial', __( 'Some large files were not scanned', 'ccs-upload-diff' ), __( 'Files over 2 MB, and anything past 40 MB of changed code, are compared but not read for the checks above.', 'ccs-upload-diff' ) );
+			$this->add( 'info', 'partial', __( 'Some large files were not scanned', 'patchmark' ), __( 'Files over 2 MB, and anything past 40 MB of changed code, are compared but not read for the checks above.', 'patchmark' ) );
 		}
 	}
 

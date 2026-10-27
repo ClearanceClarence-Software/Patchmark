@@ -2,10 +2,10 @@
 /**
  * Hooks into the "This plugin is already installed" screen.
  *
- * @package UploadDiff
+ * @package Patchmark
  */
 
-namespace ClearanceClarence\UploadDiff;
+namespace ClearanceClarence\Patchmark;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Plugin {
 
-	const HANDLE = 'ccs-upload-diff';
+	const HANDLE = 'patchmark';
 
 	/**
 	 * The review built during this request.
@@ -53,7 +53,7 @@ final class Plugin {
 		if ( null === $asset ) {
 			return;
 		}
-		wp_enqueue_style( self::HANDLE, CCS_UPLOAD_DIFF_URL . 'build/index.css', array(), $asset['version'] );
+		wp_enqueue_style( self::HANDLE, PATCHMARK_URL . 'build/index.css', array(), $asset['version'] );
 		wp_style_add_data( self::HANDLE, 'rtl', 'replace' );
 	}
 
@@ -63,7 +63,7 @@ final class Plugin {
 	 * @return array|null
 	 */
 	private static function asset() {
-		$file = CCS_UPLOAD_DIFF_DIR . 'build/index.asset.php';
+		$file = PATCHMARK_DIR . 'build/index.asset.php';
 		return is_readable( $file ) ? require $file : null;
 	}
 
@@ -155,6 +155,7 @@ final class Plugin {
 		$changelog = Changelog::between( $old, $new, $old_v, $new_v );
 
 		return array(
+			'version'   => PATCHMARK_VERSION,
 			'plugin'    => array(
 				'name'       => isset( $uploaded['Name'] ) ? (string) $uploaded['Name'] : $folder,
 				'folder'     => $folder,
@@ -195,7 +196,7 @@ final class Plugin {
 			return $table . '<div class="notice notice-warning inline"><p>' . esc_html(
 				sprintf(
 					/* translators: %s: error message. */
-					__( 'Upload Diff could not compare the files: %s', 'ccs-upload-diff' ),
+					__( 'Patchmark could not compare the files: %s', 'patchmark' ),
 					self::$report['error']
 				)
 			) . '</p></div>';
@@ -207,14 +208,14 @@ final class Plugin {
 		$changed = $c['added'] + $c['removed'] + $c['renamed'] + $c['modified'];
 		$summary = sprintf(
 			/* translators: 1: changed files, 2: unchanged files, 3: findings. */
-			__( '%1$d files changed, %2$d unchanged, %3$d findings. Turn on JavaScript to see the details.', 'ccs-upload-diff' ),
+			__( '%1$d files changed, %2$d unchanged, %3$d findings. Turn on JavaScript to see the details.', 'patchmark' ),
 			$changed,
 			$c['unchanged'],
 			count( self::$report['findings'] )
 		);
 
 		return $table
-			. '<div id="ccs-upload-diff" class="ccs-ud-mount"><p class="ccs-ud-loading">' . esc_html__( 'Loading the comparison…', 'ccs-upload-diff' ) . '</p></div>'
+			. '<div id="patchmark" class="pmk-mount"><p class="pmk-loading">' . esc_html__( 'Loading the comparison…', 'patchmark' ) . '</p></div>'
 			. '<noscript><p>' . esc_html( $summary ) . '</p></noscript>';
 	}
 
@@ -228,12 +229,12 @@ final class Plugin {
 			return;
 		}
 
-		wp_enqueue_script( self::HANDLE, CCS_UPLOAD_DIFF_URL . 'build/index.js', $asset['dependencies'], $asset['version'], true );
-		wp_set_script_translations( self::HANDLE, 'ccs-upload-diff' );
+		wp_enqueue_script( self::HANDLE, PATCHMARK_URL . 'build/index.js', $asset['dependencies'], $asset['version'], true );
+		wp_set_script_translations( self::HANDLE, 'patchmark' );
 
 		// JSON_HEX_TAG keeps "</script>" inside a diffed file from closing the tag.
 		$json = wp_json_encode( self::$report, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE );
-		wp_add_inline_script( self::HANDLE, 'window.ccsUploadDiff = ' . ( false === $json ? 'null' : $json ) . ';', 'before' );
+		wp_add_inline_script( self::HANDLE, 'window.patchmarkReport = ' . ( false === $json ? 'null' : $json ) . ';', 'before' );
 	}
 
 	/**
@@ -246,13 +247,13 @@ final class Plugin {
 	 */
 	private static function header_rows( $table, array $current, array $uploaded ) {
 		$fields = array(
-			'Description'     => __( 'Description', 'ccs-upload-diff' ),
-			'PluginURI'       => __( 'Plugin URI', 'ccs-upload-diff' ),
-			'AuthorURI'       => __( 'Author URI', 'ccs-upload-diff' ),
-			'UpdateURI'       => __( 'Update URI', 'ccs-upload-diff' ),
-			'TextDomain'      => __( 'Text domain', 'ccs-upload-diff' ),
-			'RequiresPlugins' => __( 'Requires plugins', 'ccs-upload-diff' ),
-			'Network'         => __( 'Network only', 'ccs-upload-diff' ),
+			'Description'     => __( 'Description', 'patchmark' ),
+			'PluginURI'       => __( 'Plugin URI', 'patchmark' ),
+			'AuthorURI'       => __( 'Author URI', 'patchmark' ),
+			'UpdateURI'       => __( 'Update URI', 'patchmark' ),
+			'TextDomain'      => __( 'Text domain', 'patchmark' ),
+			'RequiresPlugins' => __( 'Requires plugins', 'patchmark' ),
+			'Network'         => __( 'Network only', 'patchmark' ),
 		);
 
 		$rows = '';
@@ -260,8 +261,8 @@ final class Plugin {
 			$a = isset( $current[ $key ] ) ? $current[ $key ] : '';
 			$b = isset( $uploaded[ $key ] ) ? $uploaded[ $key ] : '';
 			if ( is_bool( $a ) || is_bool( $b ) ) {
-				$a = $a ? __( 'Yes', 'ccs-upload-diff' ) : __( 'No', 'ccs-upload-diff' );
-				$b = $b ? __( 'Yes', 'ccs-upload-diff' ) : __( 'No', 'ccs-upload-diff' );
+				$a = $a ? __( 'Yes', 'patchmark' ) : __( 'No', 'patchmark' );
+				$b = $b ? __( 'Yes', 'patchmark' ) : __( 'No', 'patchmark' );
 			}
 			$a = trim( wp_strip_all_tags( (string) $a ) );
 			$b = trim( wp_strip_all_tags( (string) $b ) );

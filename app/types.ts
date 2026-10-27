@@ -57,6 +57,8 @@ export type SymbolKind =
 	| 'blocks';
 
 export interface Report {
+	// Patchmark's own version.
+	version: string;
 	plugin: {
 		name: string;
 		folder: string;
@@ -91,6 +93,6 @@ export interface Report {
 
 declare global {
 	interface Window {
-		ccsUploadDiff?: Report | null;
+		patchmarkReport?: Report | null;
 	}
 }
